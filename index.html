@@ -27,20 +27,20 @@
         }
 
         :root {
-            --bg: #0a0b0f;
-            --bg-card: #12141c;
-            --bg-card-hover: #181b26;
-            --border: rgba(255, 255, 255, 0.06);
-            --border-hover: rgba(255, 255, 255, 0.12);
-            --text: #e4e4e7;
-            --text-dim: rgba(255, 255, 255, 0.5);
-            --text-dimmer: rgba(255, 255, 255, 0.3);
-            --accent: #6366f1;
-            --accent-glow: rgba(99, 102, 241, 0.15);
-            --green: #22c55e;
-            --red: #ef4444;
-            --amber: #f59e0b;
-            --cyan: #06b6d4;
+            --bg: #fafafa;
+            --bg-card: #ffffff;
+            --bg-card-hover: #f6f8fa;
+            --border: rgba(0, 0, 0, 0.08);
+            --border-hover: rgba(0, 0, 0, 0.15);
+            --text: #171717;
+            --text-dim: #555555;
+            --text-dimmer: #888888;
+            --accent: #8A2BE2;
+            --accent-glow: rgba(138, 43, 226, 0.08);
+            --green: #16a34a;
+            --red: #dc2626;
+            --amber: #d97706;
+            --cyan: #0891b2;
         }
 
         body {
@@ -56,8 +56,8 @@
             position: fixed;
             inset: 0;
             background-image:
-                linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+                linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
             background-size: 60px 60px;
             pointer-events: none;
             z-index: 0;
@@ -86,7 +86,7 @@
             justify-content: space-between;
             align-items: center;
             backdrop-filter: blur(20px);
-            background: rgba(10, 11, 15, 0.8);
+            background: rgba(255, 255, 255, 0.85);
             border-bottom: 1px solid var(--border);
         }
 
@@ -101,15 +101,10 @@
         }
 
         .nav-brand .sigil-icon {
-            width: 28px;
-            height: 28px;
-            background: var(--accent);
-            border-radius: 6px;
+            width: 44px;
+            height: 44px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            font-weight: 800;
         }
 
         .nav-links {
@@ -140,7 +135,7 @@
         }
 
         .nav-links .btn-nav:hover {
-            background: #818cf8;
+            background: #7120bc;
             transform: translateY(-1px);
         }
 
@@ -168,8 +163,8 @@
             align-items: center;
             gap: 0.5rem;
             background: var(--accent-glow);
-            border: 1px solid rgba(99, 102, 241, 0.3);
-            color: #a5b4fc;
+            border: 1px solid rgba(138, 43, 226, 0.2);
+            color: #5b21b6;
             padding: 0.4rem 1rem;
             border-radius: 100px;
             font-size: 0.82rem;
@@ -235,13 +230,14 @@
         .btn-primary {
             background: var(--accent);
             color: white;
-            box-shadow: 0 4px 24px rgba(99, 102, 241, 0.3);
+            box-shadow: 0 4px 24px rgba(138, 43, 226, 0.2);
         }
 
         .btn-primary:hover {
-            background: #818cf8;
+            background: #7120bc;
+            color: white;
             transform: translateY(-2px);
-            box-shadow: 0 8px 32px rgba(99, 102, 241, 0.4);
+            box-shadow: 0 8px 32px rgba(138, 43, 226, 0.3);
         }
 
         .btn-secondary {
@@ -461,7 +457,7 @@
         }
 
         .code-block {
-            background: #0d1117;
+            background: #f6f8fa;
             border: 1px solid var(--border);
             border-radius: 14px;
             padding: 1.5rem 2rem;
@@ -475,27 +471,27 @@
         }
 
         .code-block .kw {
-            color: #ff7b72;
+            color: #cf222e;
         }
 
         .code-block .fn {
-            color: #d2a8ff;
+            color: #8250df;
         }
 
         .code-block .str {
-            color: #a5d6ff;
+            color: #0a3069;
         }
 
         .code-block .cmt {
-            color: #8b949e;
+            color: #6e7781;
         }
 
         .code-block .type {
-            color: #79c0ff;
+            color: #0550ae;
         }
 
         .code-block .macro {
-            color: #ffa657;
+            color: #953800;
         }
 
         /* ── Conformance ── */
@@ -716,15 +712,44 @@
     <div class="bg-glow"></div>
 
     <nav>
-        <a href="/" class="nav-brand">
-            <div class="sigil-icon">S</div>
-            SIGIL
+        <a href="/" class="nav-brand" style="align-items: center; gap: 0.75rem;">
+            <svg class="sigil-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none"
+                stroke-linejoin="round" stroke-linecap="round">
+
+                <!-- Softened, thickened Quadratic S-Frame perfectly merging into the MCP pathway -->
+                <path d="M 44,12 L 44,4 L 4,4 L 4,20" stroke="var(--accent)" stroke-width="5" />
+                <path d="M 4,36 L 4,44 L 44,44 L 44,28" stroke="var(--accent)" stroke-width="5" />
+
+                <!-- Inner original MCP Logo, purely scaled and centered seamlessly within the S-frame and dot -->
+                <g transform="translate(-0.25, -3.8) scale(0.26)">
+                    <path
+                        d="M25 97.8528L92.8823 29.9706C102.255 20.598 117.451 20.598 126.823 29.9706V29.9706C136.196 39.3431 136.196 54.5391 126.823 63.9117L75.5581 115.177"
+                        stroke="#171717" stroke-width="15" stroke-linecap="round" />
+                    <path
+                        d="M76.2653 114.47L126.823 63.9117C136.196 54.5391 151.392 54.5391 160.765 63.9117L161.118 64.2652C170.491 73.6378 170.491 88.8338 161.118 98.2063L99.7248 159.6C96.6006 162.724 96.6006 167.789 99.7248 170.913L112.331 183.52"
+                        stroke="#171717" stroke-width="15" stroke-linecap="round" />
+                    <path
+                        d="M109.853 46.9411L59.6482 97.1457C50.2757 106.518 50.2757 121.714 59.6482 131.087V131.087C69.0208 140.459 84.2168 140.459 93.5894 131.087L143.794 80.8822"
+                        stroke="#171717" stroke-width="15" stroke-linecap="round" />
+                </g>
+
+                <!-- Single Purple Highlight at the exact center unifying the broken S, flush with the black lines -->
+                <circle cx="24.0" cy="24.0" r="4.5" fill="var(--accent)" />
+            </svg>
+            <div style="display: flex; flex-direction: column; justify-content: center; gap: 0.1rem;">
+                <span
+                    style="font-size: 1.15rem; font-weight: 800; line-height: 1; letter-spacing: -0.02em;">SIGIL</span>
+                <span
+                    style="font-size: 0.55rem; font-weight: 700; color: var(--accent); letter-spacing: 0.05em; line-height: 1; text-transform: uppercase;">
+                    Sovereign Identity-Gated Interaction Layer
+                </span>
+            </div>
         </a>
         <div class="nav-links">
-            <a href="#problem">Why</a>
-            <a href="#how">How</a>
-            <a href="#start">Start</a>
-            <a href="https://docs.rs/sigil-protocol" target="_blank">Docs</a>
+            <a href="https://docs.rs/sigil-protocol" target="_blank">Documentation</a>
+            <a href="https://github.com/sigil-eu/sigil/tree/main/spec" target="_blank">Specification</a>
+            <a href="#registry">Registry</a>
+            <a href="#inspector">Inspector</a>
             <a href="https://github.com/sigil-eu/sigil" target="_blank" class="btn-nav">GitHub →</a>
         </div>
     </nav>
@@ -736,162 +761,269 @@
                 <span class="dot"></span>
                 v0.1.1 — Published on crates.io
             </div>
-            <h1>The Missing <span class="highlight">Security Layer</span><br>for AI Agents</h1>
-            <p class="hero-sub">
-                SIGIL secures agent-to-tool interactions with identity binding, content interception, and tamper-evident
-                audit trails. Open protocol. Rust-first.
+            <h1>The Native <span class="highlight">Security Layer</span><br>for the Model Context Protocol</h1>
+            <p class="hero-sub"
+                style="font-weight: 500; font-size: 1.1rem; color: var(--text); margin-top: -1.0rem; margin-bottom: 2rem;">
+                <strong>SIGIL</strong> stands for the <strong style="color: var(--accent);">Sovereign Identity-Gated
+                    Interaction Layer</strong>.
+            </p>
+            <p class="hero-sub" style="margin-top: 0;">
+                It seamlessly extends the MCP ecosystem with indispensable zero-trust security. Identify AI callers,
+                intercept sensitive data leaks, enforce host policies, and generate tamper-evident audit trails.
             </p>
             <div class="hero-actions">
-                <a href="https://github.com/sigil-eu/sigil" class="btn btn-primary" target="_blank">
-                    ⭐ View on GitHub
+                <a href="#start" class="btn btn-primary">
+                    Start Securing
                 </a>
                 <a href="https://docs.rs/sigil-protocol" class="btn btn-secondary" target="_blank">
-                    📖 Read the Docs
+                    Explore Documentation
                 </a>
             </div>
             <div class="install-banner">
                 <div class="install-code"
                     onclick="navigator.clipboard.writeText('cargo add sigil-protocol'); this.querySelector('.copy-hint').textContent = 'Copied!'">
-                    <span class="prompt">$</span>
+                    <span class="prompt">rust ></span>
                     <span>cargo add <span class="pkg">sigil-protocol</span></span>
                     <span class="copy-hint">click to copy</span>
                 </div>
             </div>
         </section>
 
-        <!-- Problem -->
-        <section class="problem fade-in" id="problem">
-            <div class="section-label">The Problem</div>
-            <h2>MCP Has No Security Model</h2>
+        <!-- What can SIGIL prevent -->
+        <section class="problem fade-in" id="prevent">
+            <div class="section-label">Use Cases</div>
+            <h2>What can SIGIL prevent?</h2>
             <p class="section-desc">
-                AI agents execute real-world actions — reading emails, sending money, accessing databases. The dominant
-                protocol (MCP) provides none of this:
+                Without SIGIL, the Model Context Protocol (MCP) assumes a fully trusted local environment. By wrapping
+                requests in the SIGIL envelope, you can proactively close the security gap between Hosts, Clients, and
+                Servers.
             </p>
             <div class="problem-grid">
                 <div class="problem-card">
-                    <div class="status status-mcp">MCP: Missing</div>
-                    <h3>No Identity Verification</h3>
-                    <p>Any process can call any tool. No way to know who is behind an agent action.</p>
+                    <div class="status status-sigil">Intercepted</div>
+                    <h3>Leaking API Keys to LLMs</h3>
+                    <p>The SIGIL <code>SensitivityScanner</code> intercepts secrets, IBANs, or PII before they ever
+                        reach the AI model, replacing them securely with opaque vault pointers.</p>
                 </div>
                 <div class="problem-card">
-                    <div class="status status-mcp">MCP: Missing</div>
-                    <h3>No Content Scanning</h3>
-                    <p>API keys, IBANs, PII flow freely between agents and tools with zero interception.</p>
+                    <div class="status status-sigil">Blocked</div>
+                    <h3>Unauthorized Tool Execution</h3>
+                    <p>The <code>SecurityPolicy</code> layer gates destructive MCP tools (e.g., <code>drop_table</code>)
+                        based on cryptographically verified Host and User identity.
+                    </p>
                 </div>
                 <div class="problem-card">
-                    <div class="status status-mcp">MCP: Missing</div>
-                    <h3>No Audit Trail</h3>
-                    <p>No record of what tools were called, by whom, or what data was accessed.</p>
+                    <div class="status status-sigil">Traced</div>
+                    <h3>Shadow IT & Agent Ambiguity</h3>
+                    <p>Every MCP JSON-RPC tool request and response is signed and logged by the
+                        <code>AuditLogger</code>, creating
+                        a tamper-evident record of exactly what agents did on the host.
+                    </p>
                 </div>
                 <div class="problem-card">
-                    <div class="status status-mcp">MCP: Missing</div>
-                    <h3>No Permission Gating</h3>
-                    <p>No risk levels, rate limits, or confirmation flows for destructive actions.</p>
+                    <div class="status status-sigil">Verified</div>
+                    <h3>Unknown Host Connections</h3>
+                    <p>Using the <code>IdentityProvider</code>, a SIGIL-secured MCP Server can mandate that only
+                        verified Clients
+                        can successfully connect, preventing arbitrary malware from invoking tools.</p>
                 </div>
             </div>
         </section>
 
-        <!-- How it works -->
-        <section class="architecture fade-in" id="how">
-            <div class="section-label">How SIGIL Works</div>
-            <h2>Five Traits. Any Backend.</h2>
+        <!-- Why it matters -->
+        <section class="conformance fade-in" id="matters">
+            <div class="section-label">Stakeholders</div>
+            <h2>Why does SIGIL matter?</h2>
             <p class="section-desc">
-                SIGIL defines interfaces — you bring the implementation. Regex scanner, HSM vault, LDAP identity? All
-                plug in.
+                SIGIL provides distinct value across the entire MCP ecosystem, from AI application developers to the
+                end-users they serve.
             </p>
+            <div class="conf-grid">
+                <div class="conf-card core">
+                    <div class="level-name">For Agent Builders</div>
+                    <h3>Hosts & Clients</h3>
+                    <p class="requires">Reduce liability and increase trust by enforcing global security policies across
+                        all connected servers.</p>
+                    <p class="use-case">"We can deploy agents knowing they can't leak secrets or run unauthorized
+                        commands."</p>
+                </div>
+                <div class="conf-card guard">
+                    <div class="level-name">For Tool Builders</div>
+                    <h3>Servers</h3>
+                    <p class="requires">Secure tools by default. Wrap existing MCP servers with auth, scanning, and
+                        auditing without rewriting logic.</p>
+                    <p class="use-case">"We can publish enterprise tools safely, knowing SIGIL handles PII
+                        interception."</p>
+                </div>
+                <div class="conf-card mcp">
+                    <div class="level-name">For End-Users</div>
+                    <h3>Humans</h3>
+                    <p class="requires">Granular transparency and control over what autonomous agents are doing on your
+                        behalf.</p>
+                    <p class="use-case">"I can review exactly what the agent read before I approve this transaction."
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Architecture / Envelope -->
+        <section class="code-section fade-in" id="how">
+            <div class="section-label">Architecture</div>
+            <h2>The SIGIL Envelope</h2>
+            <p class="section-desc">
+                SIGIL acts as a standard extension to the MCP JSON-RPC protocol. It wraps standard tool calls with
+                identity and security
+                metadata, processed seamlessly through a 5-layer zero-trust pipeline.
+            </p>
+
+            <div class="code-block" style="margin-bottom: 3rem; text-align: left;">
+                <span class="cmt">// 1. Standard Request from an Agent (Host/Client)</span>
+                {
+                <span class="str">"method"</span>: <span class="str">"tools/call"</span>,
+                <span class="str">"params"</span>: { <span class="str">"name"</span>: <span
+                    class="str">"read_email"</span>, <span class="str">"arguments"</span>: {} },
+                <span class="type">"_sigil"</span>: {
+                <span class="str">"identity"</span>: <span class="str">"eidas:DE/123456789"</span>,
+                <span class="str">"trust_level"</span>: <span class="str">"High"</span>,
+                <span class="str">"policy_approved"</span>: <span class="kw">true</span>,
+                <span class="str">"audit_id"</span>: <span class="str">"550e8400-e29b-41d4-a716-446655440000"</span>
+                }
+                }
+
+                <span class="cmt">// 2. Response from the Tool (Server) - Scanned & Intercepted</span>
+                {
+                <span class="str">"result"</span>: {
+                <span class="str">"content"</span>: [{ <span class="str">"text"</span>: <span class="str">"Email from
+                    bank: [SIGIL-VAULT: IBAN]"</span> }]
+                },
+                <span class="type">"_sigil"</span>: { <span class="str">"scanned"</span>: <span class="kw">true</span>,
+                <span class="str">"interceptions"</span>: <span class="kw">1</span> }
+                }
+            </div>
+
             <div class="traits-grid">
                 <div class="trait-card">
                     <div class="trait-name">IdentityProvider</div>
                     <h3>🪪 Identity Binding</h3>
-                    <p>Bind users to verifiable trust levels — OIDC, eIDAS, SSI. Gate tools by who you are.</p>
+                    <p>Bind AI callers to verifiable trust levels (OIDC, eIDAS). Validated seamlessly on the host or
+                        server.</p>
                 </div>
                 <div class="trait-card">
                     <div class="trait-name">SensitivityScanner</div>
                     <h3>🔍 Content Interception</h3>
-                    <p>Detect API keys, IBANs, PII before they reach the LLM. Domain-specific patterns.</p>
+                    <p>Scan MCP Tool requests and responses for API keys or PII before LLMs process them.</p>
                 </div>
                 <div class="trait-card">
                     <div class="trait-name">VaultProvider</div>
                     <h3>🔒 Encrypted Vault</h3>
-                    <p>Intercepted secrets are encrypted and stored with opaque pointers. Never leak.</p>
+                    <p>Intercepted MCP secrets are encrypted, stored locally, and replaced by opaque LLM-safe pointers.
+                    </p>
                 </div>
                 <div class="trait-card">
                     <div class="trait-name">AuditLogger</div>
                     <h3>📋 Tamper-Evident Audit</h3>
-                    <p>Every security event logged with HMAC signatures. Who did what, when, why.</p>
+                    <p>Every MCP security event is securely logged with HMAC signatures creating an immutable trace over
+                        Agent actions.</p>
                 </div>
                 <div class="trait-card">
                     <div class="trait-name">SecurityPolicy</div>
                     <h3>🛡️ Policy Enforcement</h3>
-                    <p>Risk classification, rate limiting, confirmation gates. Zero-trust by default.</p>
+                    <p>Declare MCP tool risk classifications and required confirmation gates. Zero-trust by default.</p>
                 </div>
                 <div class="trait-card">
                     <div class="trait-name">SigilMcpServer</div>
-                    <h3>🔌 MCP Server</h3>
-                    <p>Reference implementation wrapping any tool set with all five layers. Drop-in ready.</p>
+                    <h3>🔌 SIGIL Server Wrapper</h3>
+                    <p>Wrap any MCP tool set with all five security layers in 4 lines of rust. Drop-in ready for the
+                        ecosystem.</p>
                 </div>
             </div>
         </section>
 
-        <!-- Code Example -->
+        <!-- Start Securing -->
         <section class="code-section fade-in" id="start">
-            <div class="section-label">Quick Start</div>
-            <h2>Secure an MCP Server in 4 Lines</h2>
+            <div class="section-label">Developer Quick Start</div>
+            <h2>Start Securing the Ecosystem</h2>
             <p class="section-desc">
-                Add <code style="color:var(--accent)">sigil-protocol</code> to your Cargo.toml, implement a scanner, and
-                wrap your tools.
+                SIGIL provides drop-in native utilities for both MCP Servers and MCP Clients/Hosts to quickly embed the
+                security
+                envelope universally.
             </p>
-            <div class="code-block">
+
+            <h3>1. Secure your MCP Servers</h3>
+            <p class="section-desc" style="font-size: 0.9rem; margin-bottom: 1rem;">Wrap your existing Rust MCP toolsets
+                with the full SIGIL intercept pipeline in just 4 lines of code.</p>
+            <div class="code-block" style="text-align: left; margin-bottom: 2rem;">
                 <span class="kw">use</span> <span class="type">sigil_protocol</span>::mcp_server::{<span
                     class="type">SigilMcpServer</span>, <span class="type">ToolDef</span>};
                 <span class="kw">use</span> <span class="type">sigil_protocol</span>::<span
                     class="type">TrustLevel</span>;
 
-                <span class="cmt">// Create a SIGIL-secured MCP server</span>
+                <span class="cmt">// Create a SIGIL-secured MCP server pipeline</span>
                 <span class="kw">let</span> scanner = Arc::new(MyScanner);
                 <span class="kw">let</span> audit = Arc::new(MyAuditLogger::new());
                 <span class="kw">let mut</span> server = <span class="type">SigilMcpServer</span>::<span
                     class="fn">new</span>(<span class="str">"my-tools"</span>, <span class="str">"1.0"</span>, scanner,
                 audit);
 
-                <span class="cmt">// Register tools — SIGIL scans input AND output automatically</span>
-                server.<span class="fn">register_tool</span>(my_tool);
-
-                <span class="cmt">// Trust-gate sensitive tools (requires eIDAS identity)</span>
+                <span class="cmt">// Trust-gate sensitive tools (e.g. requires High trust via eIDAS)</span>
                 server.<span class="fn">register_tool_with_trust</span>(banking_tool, <span
                     class="type">TrustLevel</span>::High);
 
-                <span class="cmt">// Every call is now identity-gated, scanned, and audited</span>
+                <span class="cmt">// Automatically enforce policies, scan data, and log action!</span>
                 <span class="kw">let</span> response = server.<span class="fn">handle_request</span>(request,
                 caller_trust).<span class="kw">await</span>;
             </div>
+
+            <h3 style="margin-top: 3rem;">2. Secure your MCP Clients & Hosts</h3>
+            <p class="section-desc" style="font-size: 0.9rem; margin-bottom: 1rem;">Proxy agent tool calls through
+                SIGIL's universal Client Enforcer to intercept LLM responses safely before they execute on the host.</p>
+            <div class="code-block" style="text-align: left;">
+                <span class="kw">import</span> { <span class="type">SigilProxy</span> } <span class="kw">from</span>
+                <span class="str">"@sigil-eu/sdk-node"</span>;
+
+                <span class="cmt">// Wrap the standard @modelcontextprotocol/sdk/client</span>
+                <span class="kw">const</span> secureClient = <span class="kw">new</span> <span
+                    class="fn">SigilProxy</span>(baseClient, {
+                enforceAudit: <span class="kw">true</span>,
+                blockLeakedSecrets: <span class="kw">true</span>
+                });
+
+                <span class="cmt">// Call tools normally; SIGIL intercepts policy violations automatically</span>
+                <span class="kw">await</span> secureClient.callTool({ name: <span class="str">"execute_query"</span>,
+                arguments: { q: <span class="str">"DROP TABLE users;"</span> }});
+                <span class="cmt">// -> throws SigilPolicyError: Action denied by risk policy.</span>
+            </div>
         </section>
 
-        <!-- Conformance -->
-        <section class="conformance fade-in">
-            <div class="section-label">Conformance Levels</div>
-            <h2>Choose Your Security Depth</h2>
-            <p class="section-desc">
-                SIGIL defines three conformance levels. Start minimal, add layers as needed.
-            </p>
-            <div class="conf-grid">
-                <div class="conf-card core">
-                    <div class="level-name">SIGIL-Core</div>
-                    <h3>Identity + Audit</h3>
-                    <p class="requires">Know who did what, when. The minimum baseline.</p>
-                    <p class="use-case">"We need basic accountability for our agent actions."</p>
+        <!-- Ecosystem -->
+        <section class="problem fade-in" id="ecosystem" style="padding-top: 2rem;">
+            <div class="section-label">Ecosystem</div>
+            <h2>Developer Ecosystem</h2>
+            <div class="problem-grid">
+                <div class="problem-card" style="border-color: var(--accent); position: relative; overflow: hidden;">
+                    <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--accent);">
+                    </div>
+                    <div class="status status-sigil" style="margin-top: 0.5rem;">Reference Platform</div>
+                    <h3>MyMolt</h3>
+                    <p>The first sovereign OS for AI Agents. Natively implements SIGIL with an E2EE Hoodik Vault and UI
+                        for audit logs.</p>
+                    <a href="https://github.com/beykuet/MyMolt" target="_blank"
+                        style="color: var(--accent); font-size: 0.85rem; margin-top: 0.5rem; display: inline-block; text-decoration: none; font-weight: 500;">Explore
+                        MyMolt →</a>
                 </div>
-                <div class="conf-card guard">
-                    <div class="level-name">SIGIL-Guard</div>
-                    <h3>Core + Scanner + Vault</h3>
-                    <p class="requires">Full content interception. Sensitive data never leaks to the LLM.</p>
-                    <p class="use-case">"We handle PII and financial data — nothing must leak."</p>
+                <div class="problem-card">
+                    <div class="status status-mcp">Coming Soon</div>
+                    <h3 id="inspector">SIGIL Inspector</h3>
+                    <p>A native developer tool inspired by the MCP Inspector, allowing you to visualize security
+                        envelopes, policies, and audit
+                        logs locally.</p>
                 </div>
-                <div class="conf-card mcp">
-                    <div class="level-name">SIGIL-MCP</div>
-                    <h3>Guard + MCP Server</h3>
-                    <p class="requires">Every MCP tool call is identity-gated, scanned, and audited.</p>
-                    <p class="use-case">"We run MCP servers in production — every call must be secured."</p>
+                <div class="problem-card">
+                    <div class="status status-mcp">Coming Soon</div>
+                    <h3 id="registry">SIGIL Registry</h3>
+                    <p>A decentralized package registry for <code>SensitivityScanner</code> regex patterns and global
+                        <code>SecurityPolicies</code> to crowdsource agent safety across the globe.
+                    </p>
                 </div>
             </div>
         </section>
