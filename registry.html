@@ -14,18 +14,18 @@
         rel="stylesheet">
     <style>
         :root {
-            --bg: #0a0a0f;
-            --surface: #111118;
-            --surface2: #1a1a24;
-            --border: rgba(255, 255, 255, 0.08);
-            --accent: #7c6af7;
-            --accent2: #a78bfa;
-            --green: #22c55e;
-            --yellow: #f59e0b;
-            --red: #ef4444;
-            --text: #e2e8f0;
+            --bg: #ffffff;
+            --surface: #f8f8fc;
+            --surface2: #f0eff8;
+            --border: rgba(0, 0, 0, 0.08);
+            --accent: #6d59e8;
+            --accent2: #7c6af7;
+            --green: #16a34a;
+            --yellow: #d97706;
+            --red: #dc2626;
+            --text: #1e1b3a;
             --muted: #64748b;
-            --code-bg: #0d1117;
+            --code-bg: #f3f2fb;
         }
 
         * {
@@ -51,8 +51,8 @@
             content: '';
             position: fixed;
             inset: 0;
-            background-image: linear-gradient(rgba(124, 106, 247, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(124, 106, 247, 0.03) 1px, transparent 1px);
+            background-image: linear-gradient(rgba(109, 89, 232, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(109, 89, 232, 0.05) 1px, transparent 1px);
             background-size: 40px 40px;
             pointer-events: none;
             z-index: 0;
@@ -67,7 +67,7 @@
             align-items: center;
             justify-content: space-between;
             padding: 0.9rem 2rem;
-            background: rgba(10, 10, 15, 0.85);
+            background: rgba(255, 255, 255, 0.88);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border);
         }
@@ -245,7 +245,7 @@
 
         p {
             margin-bottom: 1rem;
-            color: #94a3b8;
+            color: #475569;
         }
 
         a {
@@ -305,7 +305,7 @@
 
         .endpoint-desc {
             padding: 0.75rem 1.25rem;
-            color: #94a3b8;
+            color: #475569;
             font-size: 0.9rem;
             border-bottom: 1px solid var(--border);
         }
@@ -320,28 +320,29 @@
             font-size: 0.82rem;
             line-height: 1.7;
             margin: 1rem 0;
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border);
             position: relative;
+            color: #2d2b55;
         }
 
         pre .comment {
-            color: #6e7681;
+            color: #8590a2;
         }
 
         pre .key {
-            color: #79c0ff;
+            color: #0550ae;
         }
 
         pre .string {
-            color: #a5d6ff;
+            color: #0a3069;
         }
 
         pre .number {
-            color: #f2cc60;
+            color: #953800;
         }
 
         pre .kw {
-            color: var(--accent2);
+            color: var(--accent);
         }
 
         pre .url {
@@ -353,7 +354,7 @@
             position: absolute;
             top: 0.6rem;
             right: 0.6rem;
-            background: rgba(255, 255, 255, 0.06);
+            background: rgba(0, 0, 0, 0.04);
             border: 1px solid var(--border);
             color: var(--muted);
             font-size: 0.72rem;
@@ -433,8 +434,8 @@
 
         td {
             padding: 0.65rem 0.75rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-            color: #94a3b8;
+            border-bottom: 1px solid var(--border);
+            color: #475569;
             vertical-align: top;
         }
 
@@ -633,7 +634,8 @@
                 <tr>
                     <td><strong>Security Policies</strong></td>
                     <td>Community-submitted risk classifications for MCP tool names (e.g.
-                        <code>execute_sql → critical</code>).</td>
+                        <code>execute_sql → critical</code>).
+                    </td>
                     <td>Ed25519 signature for writes</td>
                 </tr>
             </table>
@@ -804,7 +806,8 @@
                             <td><code>category</code></td>
                             <td>string</td>
                             <td>Filter: <code>secret</code> | <code>pii</code> | <code>credential</code> |
-                                <code>financial</code></td>
+                                <code>financial</code>
+                            </td>
                         </tr>
                         <tr>
                             <td><code>verified</code></td>
@@ -850,7 +853,8 @@
                 </div>
                 <div class="endpoint-desc">Download a compiled bundle of all <strong>verified</strong> patterns for SDK
                     consumption. Increments the download counter on all returned patterns. This is the endpoint used by
-                    <code>sigil-protocol</code> Rust crate's <code>RemoteScanner::from_registry()</code>.</div>
+                    <code>sigil-protocol</code> Rust crate's <code>RemoteScanner::from_registry()</code>.
+                </div>
                 <div style="padding:1rem 1.25rem;">
                     <pre><button class="copy-btn" onclick="copy(this)">Copy</button><span class="kw">curl</span> https://registry.sigil-protocol.org/patterns/bundle
 
@@ -877,7 +881,8 @@
                 </div>
                 <div class="endpoint-desc">Submit a new community scanner pattern. Requires a registered
                     <code>did:sigil:</code> and a valid Ed25519 signature. New patterns are <code>verified=false</code>
-                    until reviewed by a SIGIL maintainer.</div>
+                    until reviewed by a SIGIL maintainer.
+                </div>
                 <div style="padding:1rem 1.25rem;">
                     <pre><button class="copy-btn" onclick="copy(this)">Copy</button><span class="comment"># 1. Build the canonical message to sign:</span>
 <span class="comment">#    "sigil-registry:pattern:{name}:{category}:{regex}:{author_did}"</span>
@@ -936,7 +941,8 @@
 
             <p>Community-curated risk classifications for MCP tool names. These mirror the built-in
                 <code>SecurityPolicy::default()</code> rules in the <code>sigil-protocol</code> Rust crate and are used
-                by SIGIL Guard-level servers to auto-enforce tool risk gates.</p>
+                by SIGIL Guard-level servers to auto-enforce tool risk gates.
+            </p>
 
             <div class="endpoint">
                 <div class="endpoint-header">
