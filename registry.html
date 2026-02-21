@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGIL Registry — API Documentation & How-To</title>
+    <meta name="description"
+        content="Complete API reference and how-to guide for the SIGIL Protocol community registry: DID resolution, crowdsourced scanner patterns, and security policies.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --surface: #111118;
+            --surface2: #1a1a24;
+            --border: rgba(255, 255, 255, 0.08);
+            --accent: #7c6af7;
+            --accent2: #a78bfa;
+            --green: #22c55e;
+            --yellow: #f59e0b;
+            --red: #ef4444;
+            --text: #e2e8f0;
+            --muted: #64748b;
+            --code-bg: #0d1117;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        /* ── Grid bg ── */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: linear-gradient(rgba(124, 106, 247, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(124, 106, 247, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ── Nav ── */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.9rem 2rem;
+            background: rgba(10, 10, 15, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--text);
+        }
+
+        .sigil-icon {
+            width: 32px;
+            height: 32px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--text);
+        }
+
+        .btn-nav {
+            background: var(--accent);
+            color: #fff !important;
+            padding: 0.45rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        /* ── Layout ── */
+        .page {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            gap: 3rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ── Sidebar ── */
+        .sidebar {
+            position: sticky;
+            top: 80px;
+            height: calc(100vh - 100px);
+            overflow-y: auto;
+            padding-right: 1rem;
+        }
+
+        .sidebar-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .sidebar-title {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 0.3rem 0.75rem;
+            border-radius: 6px;
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.15s;
+            border-left: 2px solid transparent;
+        }
+
+        .sidebar a:hover {
+            color: var(--text);
+            background: var(--surface2);
+            border-left-color: var(--accent);
+        }
+
+        /* ── Content ── */
+        .content {
+            min-width: 0;
+            padding-top: 1rem;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.03em;
+        }
+
+        h1 span {
+            color: var(--accent);
+        }
+
+        .lead {
+            color: var(--muted);
+            font-size: 1.05rem;
+            margin-bottom: 2rem;
+            max-width: 640px;
+        }
+
+        .status-bar {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
+            padding: 1rem 1.25rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+
+        .stat {
+            display: flex;
+            flex-direction: column;
+            gap: 0.1rem;
+        }
+
+        .stat-val {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--accent);
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .divider {
+            width: 1px;
+            background: var(--border);
+            align-self: stretch;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin: 3rem 0 0.75rem;
+            padding-top: 1rem;
+            letter-spacing: -0.02em;
+            border-top: 1px solid var(--border);
+        }
+
+        h2:first-of-type {
+            border-top: none;
+            margin-top: 0;
+        }
+
+        h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.5rem;
+            color: var(--text);
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: #94a3b8;
+        }
+
+        a {
+            color: var(--accent);
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85em;
+            background: var(--surface2);
+            padding: 0.15em 0.4em;
+            border-radius: 4px;
+            color: var(--accent2);
+        }
+
+        /* ── Endpoint block ── */
+        .endpoint {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin: 1.25rem 0;
+            overflow: hidden;
+        }
+
+        .endpoint-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.25rem;
+            background: var(--surface2);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .method {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.25rem 0.6rem;
+            border-radius: 5px;
+        }
+
+        .get {
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--green);
+        }
+
+        .post {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--yellow);
+        }
+
+        .endpoint-path {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+
+        .endpoint-desc {
+            padding: 0.75rem 1.25rem;
+            color: #94a3b8;
+            font-size: 0.9rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* ── Code block ── */
+        pre {
+            background: var(--code-bg);
+            border-radius: 10px;
+            padding: 1.25rem;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            line-height: 1.7;
+            margin: 1rem 0;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            position: relative;
+        }
+
+        pre .comment {
+            color: #6e7681;
+        }
+
+        pre .key {
+            color: #79c0ff;
+        }
+
+        pre .string {
+            color: #a5d6ff;
+        }
+
+        pre .number {
+            color: #f2cc60;
+        }
+
+        pre .kw {
+            color: var(--accent2);
+        }
+
+        pre .url {
+            color: var(--green);
+        }
+
+        /* Copy button */
+        .copy-btn {
+            position: absolute;
+            top: 0.6rem;
+            right: 0.6rem;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 0.72rem;
+            padding: 0.25rem 0.6rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.15s;
+        }
+
+        .copy-btn:hover {
+            background: var(--surface2);
+            color: var(--text);
+        }
+
+        /* ── Badge / pill ── */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 0.2rem 0.55rem;
+            border-radius: 999px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .badge-live {
+            background: rgba(34, 197, 94, 0.12);
+            color: var(--green);
+            border: 1px solid rgba(34, 197, 94, 0.25);
+        }
+
+        .badge-critical {
+            background: rgba(239, 68, 68, 0.12);
+            color: var(--red);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+        }
+
+        .badge-high {
+            background: rgba(245, 158, 11, 0.12);
+            color: var(--yellow);
+            border: 1px solid rgba(245, 158, 11, 0.25);
+        }
+
+        .badge-medium {
+            background: rgba(124, 106, 247, 0.12);
+            color: var(--accent2);
+            border: 1px solid rgba(124, 106, 247, 0.25);
+        }
+
+        .badge-low {
+            background: rgba(100, 116, 139, 0.12);
+            color: var(--muted);
+            border: 1px solid rgba(100, 116, 139, 0.25);
+        }
+
+        /* ── Table ── */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+            margin: 1rem 0;
+        }
+
+        th {
+            text-align: left;
+            padding: 0.6rem 0.75rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+        }
+
+        td {
+            padding: 0.65rem 0.75rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            color: #94a3b8;
+            vertical-align: top;
+        }
+
+        td code {
+            font-size: 0.8rem;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ── Alert callout ── */
+        .alert {
+            display: flex;
+            gap: 0.75rem;
+            padding: 1rem 1.25rem;
+            border-radius: 10px;
+            margin: 1.25rem 0;
+            font-size: 0.9rem;
+        }
+
+        .alert-info {
+            background: rgba(124, 106, 247, 0.08);
+            border: 1px solid rgba(124, 106, 247, 0.2);
+        }
+
+        .alert-warn {
+            background: rgba(245, 158, 11, 0.08);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .alert p {
+            margin: 0;
+            color: inherit;
+        }
+
+        /* ── Footer ── */
+        footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--muted);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border);
+            margin-top: 4rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        footer a {
+            color: var(--muted);
+        }
+
+        footer a:hover {
+            color: var(--text);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .page {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            h1 {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <a href="/" class="nav-brand">
+            <svg class="sigil-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+                <rect x="2" y="2" width="44" height="44" rx="14" fill="#7c6af7" />
+                <path d="M 32,16 C 32,10 24,10 20,10 C 12,10 12,20 20,24 C 28,28 36,26 36,36 C 36,44 24,42 16,36"
+                    stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <div style="display:flex;flex-direction:column;gap:0.1rem;">
+                <span style="font-size:1.1rem;font-weight:800;line-height:1;">SIGIL</span>
+                <span
+                    style="font-size:0.55rem;font-weight:700;color:#7c6af7;letter-spacing:0.05em;text-transform:uppercase;">Registry
+                    Docs</span>
+            </div>
+        </a>
+        <div class="nav-links">
+            <a href="/">← Home</a>
+            <a href="https://docs.rs/sigil-protocol" target="_blank">Rust Docs</a>
+            <a href="https://github.com/sigil-eu/sigil" target="_blank">GitHub</a>
+            <a href="https://registry.sigil-protocol.org/health" target="_blank" class="btn-nav">Live API →</a>
+        </div>
+    </nav>
+
+    <div class="page">
+
+        <!-- ── Sidebar ── -->
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Getting Started</div>
+                <a href="#overview">Overview</a>
+                <a href="#base-url">Base URL</a>
+                <a href="#auth">Authentication</a>
+                <a href="#quickstart">Quick Start</a>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-title">DID Registry</div>
+                <a href="#did-resolve">Resolve DID</a>
+                <a href="#did-register">Register DID</a>
+                <a href="#did-revoke">Revoke DID</a>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-title">Scanner Patterns</div>
+                <a href="#patterns-list">List Patterns</a>
+                <a href="#patterns-bundle">Download Bundle</a>
+                <a href="#patterns-get">Get Pattern</a>
+                <a href="#patterns-submit">Submit Pattern</a>
+                <a href="#patterns-vote">Vote on Pattern</a>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-title">Security Policies</div>
+                <a href="#policies-list">List Policies</a>
+                <a href="#policies-get">Get Policy</a>
+                <a href="#policies-submit">Submit Policy</a>
+                <a href="#policies-vote">Vote on Policy</a>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-title">SDK Integration</div>
+                <a href="#sdk-rust">Rust Crate</a>
+                <a href="#sdk-signing">Signing Submissions</a>
+                <a href="#sdk-verification">Verification</a>
+            </div>
+        </aside>
+
+        <!-- ── Main content ── -->
+        <main class="content">
+
+            <h1>SIGIL <span>Registry</span> API</h1>
+            <p class="lead">Community-curated DID resolution, scanner patterns, and security policies for the SIGIL
+                Protocol — live at <a href="https://registry.sigil-protocol.org"
+                    target="_blank">registry.sigil-protocol.org</a>.</p>
+
+            <div class="status-bar">
+                <div class="stat">
+                    <span class="stat-val">✅</span>
+                    <span class="stat-label">Status</span>
+                </div>
+                <div class="divider"></div>
+                <div class="stat">
+                    <span class="stat-val">24</span>
+                    <span class="stat-label">Verified Patterns</span>
+                </div>
+                <div class="divider"></div>
+                <div class="stat">
+                    <span class="stat-val">25</span>
+                    <span class="stat-label">Security Policies</span>
+                </div>
+                <div class="divider"></div>
+                <div class="stat">
+                    <span class="stat-val">fra</span>
+                    <span class="stat-label">Region (EU 🇪🇺)</span>
+                </div>
+                <div class="divider"></div>
+                <div class="stat">
+                    <span class="stat-val">TLS 1.3</span>
+                    <span class="stat-label">Transport</span>
+                </div>
+            </div>
+
+            <!-- ── Overview ── -->
+            <h2 id="overview">Overview</h2>
+
+            <p>The SIGIL Registry is a public REST API serving three distinct purposes:</p>
+
+            <table>
+                <tr>
+                    <th>Surface</th>
+                    <th>Description</th>
+                    <th>Auth required</th>
+                </tr>
+                <tr>
+                    <td><strong>DID Registry</strong></td>
+                    <td>Register and resolve <code>did:sigil:</code> identifiers to Ed25519 public keys per SIGIL Spec
+                        §7.</td>
+                    <td>None for reads; challenge-response for writes (planned)</td>
+                </tr>
+                <tr>
+                    <td><strong>Scanner Patterns</strong></td>
+                    <td>Community-submitted regex patterns for detecting PII, credentials, and secrets in MCP tool
+                        responses.</td>
+                    <td>Ed25519 signature (author's <code>did:sigil:</code>) for writes</td>
+                </tr>
+                <tr>
+                    <td><strong>Security Policies</strong></td>
+                    <td>Community-submitted risk classifications for MCP tool names (e.g.
+                        <code>execute_sql → critical</code>).</td>
+                    <td>Ed25519 signature for writes</td>
+                </tr>
+            </table>
+
+            <!-- ── Base URL ── -->
+            <h2 id="base-url">Base URL</h2>
+
+            <pre><span class="url">https://registry.sigil-protocol.org</span>   <span class="comment"># production (Frankfurt, EU)</span>
+<span class="url">http://localhost:3100</span>                 <span class="comment"># local development</span></pre>
+
+            <p>All responses are JSON. The API is CORS-permissive for browser-based integrations.</p>
+
+            <!-- ── Auth ── -->
+            <h2 id="auth">Authentication</h2>
+
+            <p>Read endpoints (<code>GET</code>) require no authentication. Write endpoints
+                (<code>POST /patterns</code>, <code>POST /policies</code>, votes) require an <strong>Ed25519
+                    signature</strong> from a registered <code>did:sigil:</code> private key.</p>
+
+            <div class="alert alert-info">
+                <span>ℹ️</span>
+                <p>This prevents anonymous spam while keeping the registry publicly readable. Every submission is
+                    permanently linked to a verifiable identity.</p>
+            </div>
+
+            <p>The canonical message to sign depends on the endpoint — see <a href="#sdk-signing">Signing
+                    Submissions</a> below.</p>
+
+            <!-- ── Quick Start ── -->
+            <h2 id="quickstart">Quick Start</h2>
+
+            <h3>Fetch the verified pattern bundle</h3>
+            <pre><button class="copy-btn" onclick="copy(this)">Copy</button><span class="kw">curl</span> https://registry.sigil-protocol.org/patterns/bundle | jq <span class="string">'.patterns[].name'</span></pre>
+
+            <h3>Look up security policies for a specific tool</h3>
+            <pre><button class="copy-btn" onclick="copy(this)">Copy</button><span class="kw">curl</span> <span class="string">"https://registry.sigil-protocol.org/policies?tool_name=execute_sql"</span></pre>
+
+            <h3>Resolve a DID</h3>
+            <pre><button class="copy-btn" onclick="copy(this)">Copy</button><span class="kw">curl</span> https://registry.sigil-protocol.org/resolve/did:sigil:mymolt_user_01</pre>
+
+            <!-- ═══════════════════════════════════════════════════════════════════ -->
+            <!-- DID REGISTRY -->
+            <!-- ═══════════════════════════════════════════════════════════════════ -->
+
+            <h2 id="did-resolve">DID Registry</h2>
+
+            <div class="endpoint" id="did-resolve">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/resolve/:did</span>
+                </div>
+                <div class="endpoint-desc">Resolve a <code>did:sigil:</code> identifier to its Ed25519 public key and
+                    metadata. Revoked DIDs remain resolvable for 24h per SIGIL Spec §11.3.</div>
+                <div style="padding:1rem 1.25rem;">
+                    <pre><button class="copy-btn" onclick="copy(this)">Copy</button><span class="kw">curl</span> https://registry.sigil-protocol.org/resolve/did:sigil:mymolt_user_01
+
+<span class="comment"># Response</span>
+{
+  <span class="key">"did"</span>: <span class="string">"did:sigil:mymolt_user_01"</span>,
+  <span class="key">"status"</span>: <span class="string">"active"</span>,
+  <span class="key">"public_key"</span>: <span class="string">"MCowBQYDK2VdAyEA..."</span>,
+  <span class="key">"namespace"</span>: <span class="string">"mymolt"</span>,
+  <span class="key">"label"</span>: <span class="string">"MyMolt User 01"</span>,
+  <span class="key">"created_at"</span>: <span class="string">"2026-02-21T12:00:00Z"</span>,
+  <span class="key">"updated_at"</span>: <span class="string">"2026-02-21T12:00:00Z"</span>
+}</pre>
+                </div>
+            </div>
+
+            <div class="endpoint" id="did-register">
+                <div class="endpoint-header">
+                    <span class="method post">POST</span>
+                    <span class="endpoint-path">/register</span>
+                </div>
+                <div class="endpoint-desc">Register a new <code>did:sigil:</code> identifier with an Ed25519 public key.
+                    DID must start with <code>did:sigil:</code>.</div>
+                <div style="padding:1rem 1.25rem;">
+                    <pre><button class="copy-btn" onclick="copy(this)">Copy</button><span class="kw">curl</span> -X POST https://registry.sigil-protocol.org/register \
+  -H <span class="string">"Content-Type: application/json"</span> \
+  -d <span class="string">'{
+    "did": "did:sigil:my_agent_01",
+    "public_key": "MCowBQYDK2VdAyEA...",
+    "namespace": "my_agent",
+    "label": "My Agent v1"
+  }'</span>
+
+<span class="comment"># Response 201</span>
+{
+  <span class="key">"did"</span>: <span class="string">"did:sigil:my_agent_01"</span>,
+  <span class="key">"status"</span>: <span class="string">"active"</span>,
+  <span class="key">"message"</span>: <span class="string">"DID registered successfully"</span>
+}</pre>
+                </div>
+            </div>
+
+            <div class="endpoint" id="did-revoke">
+                <div class="endpoint-header">
+                    <span class="method post">POST</span>
+                    <span class="endpoint-path">/revoke/:did</span>
+                </div>
+                <div class="endpoint-desc">Revoke a DID. The key remains resolvable for 24h so in-flight signed messages
+                    can still be verified.</div>
+                <div style="padding:1rem 1.25rem;">
+                    <pre><button class="copy-btn" onclick="copy(this)">Copy</button><span class="kw">curl</span> -X POST https://registry.sigil-protocol.org/revoke/did:sigil:my_agent_01
+
+<span class="comment"># Response 200</span>
+{
+  <span class="key">"did"</span>: <span class="string">"did:sigil:my_agent_01"</span>,
+  <span class="key">"status"</span>: <span class="string">"revoked"</span>,
+  <span class="key">"message"</span>: <span class="string">"DID revoked. Key remains resolvable for 24h per SIGIL Spec §11.3."</span>
+}</pre>
+                </div>
+            </div>
+
+            <!-- ═══════════════════════════════════════════════════════════════════ -->
+            <!-- SCANNER PATTERNS -->
+            <!-- ═══════════════════════════════════════════════════════════════════ -->
+
+            <h2 id="patterns-list">Scanner Patterns</h2>
+
+            <p>Community-submitted regex patterns for detecting PII, credentials, secrets, and financial data in MCP
+                tool responses. All verified patterns are included in the <a href="#patterns-bundle">bundle endpoint</a>
+                consumed by the SIGIL Rust crate and SDKs.</p>
+
+            <h3>Categories</h3>
+            <table>
+                <tr>
+                    <th>Category</th>
+                    <th>Description</th>
+                    <th>Examples</th>
+                </tr>
+                <tr>
+                    <td><code>secret</code></td>
+                    <td>Private keys, database URLs, passwords</td>
+                    <td>PEM key, DB connection string</td>
+                </tr>
+                <tr>
+                    <td><code>credential</code></td>
+                    <td>API keys, tokens, OAuth secrets</td>
+                    <td>AWS key, OpenAI key, JWT</td>
+                </tr>
+                <tr>
+                    <td><code>pii</code></td>
+                    <td>EU personal data (GDPR Art. 4)</td>
+                    <td>Email, phone, national ID</td>
+                </tr>
+                <tr>
+                    <td><code>financial</code></td>
+                    <td>Payment data (PCI-DSS, PSD2)</td>
+                    <td>IBAN, credit card number</td>
+                </tr>
+            </table>
+
+            <div class="endpoint" id="patterns-list">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/patterns</span>
+                </div>
+                <div class="endpoint-desc">List all active scanner patterns. Sorted by votes then downloads.</div>
+                <div style="padding:1rem 1.25rem;">
+                    <table>
+                        <tr>
+                            <th>Query param</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><code>category</code></td>
+                            <td>string</td>
+                            <td>Filter: <code>secret</code> | <code>pii</code> | <code>credential</code> |
+                                <code>financial</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>verified</code></td>
+                            <td>bool</td>
+                            <td>Filter by maintainer-verified status</td>
+                        </tr>
+                        <tr>
+                            <td><code>limit</code></td>
+                            <td>int</td>
+                            <td>Max results (default 50, max 200)</td>
+                        </tr>
+                        <tr>
+                            <td><code>offset</code></td>
+                            <td>int</td>
+                            <td>Pagination offset</td>
+                        </tr>
+                    </table>
+                    <pre><button class="copy-btn" onclick="copy(this)">Copy</button><span class="comment"># All verified credential patterns</span>
+<span class="kw">curl</span> <span class="string">"https://registry.sigil-protocol.org/patterns?category=credential&amp;verified=true"</span>
+
+<span class="comment"># Response</span>
+{
+  <span class="key">"count"</span>: <span class="number">10</span>,
+  <span class="key">"offset"</span>: <span class="number">0</span>,
+  <span class="key">"patterns"</span>: [{
+    <span class="key">"id"</span>: <span class="string">"550e8400-e29b-..."</span>,
+    <span class="key">"name"</span>: <span class="string">"aws_access_key_id"</span>,
+    <span class="key">"category"</span>: <span class="string">"credential"</span>,
+    <span class="key">"pattern"</span>: <span class="string">"(AKIA|ABIA|ACCA|ASIA)[0-9A-Z]{16}"</span>,
+    <span class="key">"severity"</span>: <span class="string">"critical"</span>,
+    <span class="key">"replacement_hint"</span>: <span class="string">"[SIGIL-VAULT: AWS_KEY_ID]"</span>,
+    <span class="key">"verified"</span>: <span class="kw">true</span>,
+    <span class="key">"votes_up"</span>: <span class="number">0</span>
+  }]
+}</pre>
+                </div>
+            </div>
+
+            <div class="endpoint" id="patterns-bundle">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/patterns/bundle</span>
+                </div>
+                <div class="endpoint-desc">Download a compiled bundle of all <strong>verified</strong> patterns for SDK
+                    consumption. Increments the download counter on all returned patterns. This is the endpoint used by
+                    <code>sigil-protocol</code> Rust crate's <code>RemoteScanner::from_registry()</code>.</div>
+                <div style="padding:1rem 1.25rem;">
+                    <pre><button class="copy-btn" onclick="copy(this)">Copy</button><span class="kw">curl</span> https://registry.sigil-protocol.org/patterns/bundle
+
+<span class="comment"># Response — minimal format optimised for SDK parsing</span>
+{
+  <span class="key">"version"</span>: <span class="string">"1"</span>,
+  <span class="key">"generated_at"</span>: <span class="string">"2026-02-21T22:02:17Z"</span>,
+  <span class="key">"count"</span>: <span class="number">24</span>,
+  <span class="key">"patterns"</span>: [{
+    <span class="key">"name"</span>: <span class="string">"aws_access_key_id"</span>,
+    <span class="key">"category"</span>: <span class="string">"credential"</span>,
+    <span class="key">"pattern"</span>: <span class="string">"(AKIA|ABIA|ACCA|ASIA)[0-9A-Z]{16}"</span>,
+    <span class="key">"severity"</span>: <span class="string">"critical"</span>,
+    <span class="key">"replacement_hint"</span>: <span class="string">"[SIGIL-VAULT: AWS_KEY_ID]"</span>
+  }, ...]
+}</pre>
+                </div>
+            </div>
+
+            <div class="endpoint" id="patterns-submit">
+                <div class="endpoint-header">
+                    <span class="method post">POST</span>
+                    <span class="endpoint-path">/patterns</span>
+                </div>
+                <div class="endpoint-desc">Submit a new community scanner pattern. Requires a registered
+                    <code>did:sigil:</code> and a valid Ed25519 signature. New patterns are <code>verified=false</code>
+                    until reviewed by a SIGIL maintainer.</div>
+                <div style="padding:1rem 1.25rem;">
+                    <pre><button class="copy-btn" onclick="copy(this)">Copy</button><span class="comment"># 1. Build the canonical message to sign:</span>
+<span class="comment">#    "sigil-registry:pattern:{name}:{category}:{regex}:{author_did}"</span>
+
+<span class="comment"># 2. Sign it with your did:sigil: private key (Ed25519)</span>
+
+<span class="comment"># 3. Submit</span>
+<span class="kw">curl</span> -X POST https://registry.sigil-protocol.org/patterns \
+  -H <span class="string">"Content-Type: application/json"</span> \
+  -d <span class="string">'{
+    "name": "stripe_secret_key",
+    "description": "Stripe live secret key (sk_live_ prefix)",
+    "category": "credential",
+    "pattern": "sk_live_[0-9a-zA-Z]{24}",
+    "replacement_hint": "[SIGIL-VAULT: STRIPE_KEY]",
+    "severity": "critical",
+    "author_did": "did:sigil:your_namespace_01",
+    "signature": "&lt;base64url Ed25519 signature&gt;"
+  }'</span>
+
+<span class="comment"># Response 201</span>
+{
+  <span class="key">"id"</span>: <span class="string">"550e8400-..."</span>,
+  <span class="key">"name"</span>: <span class="string">"stripe_secret_key"</span>,
+  <span class="key">"status"</span>: <span class="string">"pending_review"</span>,
+  <span class="key">"message"</span>: <span class="string">"Pattern submitted. It will appear in the bundle once verified by a SIGIL maintainer."</span>
+}</pre>
+                </div>
+            </div>
+
+            <div class="endpoint" id="patterns-vote">
+                <div class="endpoint-header">
+                    <span class="method post">POST</span>
+                    <span class="endpoint-path">/patterns/:id/vote</span>
+                </div>
+                <div class="endpoint-desc">Vote on a pattern. Each <code>did:sigil:</code> can vote once per pattern.
+                    Requires Ed25519 signature.</div>
+                <div style="padding:1rem 1.25rem;">
+                    <pre><button class="copy-btn" onclick="copy(this)">Copy</button><span class="comment"># Sign: "sigil-registry:vote:pattern:{id}:{up|down}:{voter_did}"</span>
+
+<span class="kw">curl</span> -X POST https://registry.sigil-protocol.org/patterns/550e8400-.../vote \
+  -H <span class="string">"Content-Type: application/json"</span> \
+  -d <span class="string">'{
+    "voter_did": "did:sigil:your_namespace_01",
+    "vote": "up",
+    "signature": "&lt;base64url Ed25519 signature&gt;"
+  }'</span></pre>
+                </div>
+            </div>
+
+            <!-- ═══════════════════════════════════════════════════════════════════ -->
+            <!-- SECURITY POLICIES -->
+            <!-- ═══════════════════════════════════════════════════════════════════ -->
+
+            <h2 id="policies-list">Security Policies</h2>
+
+            <p>Community-curated risk classifications for MCP tool names. These mirror the built-in
+                <code>SecurityPolicy::default()</code> rules in the <code>sigil-protocol</code> Rust crate and are used
+                by SIGIL Guard-level servers to auto-enforce tool risk gates.</p>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/policies</span>
+                </div>
+                <div class="endpoint-desc">List all security policies. Most-voted and verified policies appear first.
+                </div>
+                <div style="padding:1rem 1.25rem;">
+                    <table>
+                        <tr>
+                            <th>Query param</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><code>tool_name</code></td>
+                            <td>string</td>
+                            <td>Filter by exact MCP tool name</td>
+                        </tr>
+                        <tr>
+                            <td><code>risk_level</code></td>
+                            <td>string</td>
+                            <td><code>low</code> | <code>medium</code> | <code>high</code> | <code>critical</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>verified</code></td>
+                            <td>bool</td>
+                            <td>Only show maintainer-verified policies</td>
+                        </tr>
+                    </table>
+                    <pre><button class="copy-btn" onclick="copy(this)">Copy</button><span class="comment"># Find the risk classification for execute_sql</span>
+<span class="kw">curl</span> <span class="string">"https://registry.sigil-protocol.org/policies?tool_name=execute_sql&amp;verified=true"</span>
+
+<span class="comment"># Response</span>
+{
+  <span class="key">"count"</span>: <span class="number">1</span>,
+  <span class="key">"policies"</span>: [{
+    <span class="key">"id"</span>: <span class="string">"..."</span>,
+    <span class="key">"tool_name"</span>: <span class="string">"execute_sql"</span>,
+    <span class="key">"risk_level"</span>: <span class="string">"high"</span>,
+    <span class="key">"requires_trust"</span>: <span class="string">"High"</span>,
+    <span class="key">"requires_confirmation"</span>: <span class="kw">true</span>,
+    <span class="key">"rationale"</span>: <span class="string">"DROP, DELETE, or UPDATE without WHERE can cause irreversible data loss..."</span>,
+    <span class="key">"verified"</span>: <span class="kw">true</span>
+  }]
+}</pre>
+                </div>
+            </div>
+
+            <div class="endpoint" id="policies-submit">
+                <div class="endpoint-header">
+                    <span class="method post">POST</span>
+                    <span class="endpoint-path">/policies</span>
+                </div>
+                <div class="endpoint-desc">Submit a new tool risk policy. Multiple policies per tool name are allowed —
+                    community votes surface the best one.</div>
+                <div style="padding:1rem 1.25rem;">
+                    <pre><button class="copy-btn" onclick="copy(this)">Copy</button><span class="comment"># Sign: "sigil-registry:policy:{tool_name}:{risk_level}:{requires_trust}:{author_did}"</span>
+
+<span class="kw">curl</span> -X POST https://registry.sigil-protocol.org/policies \
+  -H <span class="string">"Content-Type: application/json"</span> \
+  -d <span class="string">'{
+    "tool_name": "call_external_llm",
+    "risk_level": "high",
+    "requires_trust": "High",
+    "requires_confirmation": false,
+    "rationale": "Sends user context to an external model. Data exfiltration risk.",
+    "author_did": "did:sigil:your_namespace_01",
+    "signature": "&lt;base64url Ed25519 signature&gt;"
+  }'</span></pre>
+                </div>
+            </div>
+
+            <!-- ═══════════════════════════════════════════════════════════════════ -->
+            <!-- SDK INTEGRATION -->
+            <!-- ═══════════════════════════════════════════════════════════════════ -->
+
+            <h2 id="sdk-rust">SDK Integration</h2>
+
+            <h3>Rust — <code>sigil-protocol</code> crate</h3>
+
+            <p>Enable the <code>registry</code> feature to get <code>RemoteScanner</code>, which fetches the latest
+                verified patterns at startup and falls back to built-in patterns if the network is unreachable.</p>
+
+            <pre><button class="copy-btn" onclick="copy(this)">Copy</button><span class="comment"># Cargo.toml</span>
+sigil-protocol = { version = <span class="string">"0.1.4"</span>, features = [<span class="string">"registry"</span>] }</pre>
+
+            <pre><button class="copy-btn" onclick="copy(this)">Copy</button><span class="kw">use</span> sigil_protocol::RemoteScanner;
+<span class="kw">use</span> sigil_protocol::SensitivityScanner;
+
+<span class="comment">// Downloads latest verified patterns from registry.sigil-protocol.org</span>
+<span class="comment">// Falls back to built-in patterns if registry is unreachable (5s timeout)</span>
+<span class="kw">let</span> scanner = RemoteScanner::from_registry().<span class="kw">await</span>?;
+
+println!(<span class="string">"Loaded {} rules from: {:?}"</span>, scanner.rule_count(), scanner.source());
+
+<span class="comment">// Use anywhere a SensitivityScanner is needed</span>
+<span class="kw">if let</span> Some(hit) = scanner.scan(<span class="string">"key=AKIAIOSFODNN7EXAMPLE"</span>) {
+    println!(<span class="string">"Sensitive content: {hit}"</span>);
+    <span class="comment">// → "Sensitive content: [SIGIL-VAULT: AWS_KEY_ID]"</span>
+}
+
+<span class="comment">// Self-hosted or local dev registry</span>
+<span class="kw">let</span> scanner = RemoteScanner::from_url(<span class="string">"http://localhost:3100/patterns/bundle"</span>).<span class="kw">await</span>?;</pre>
+
+            <h3>Raw HTTP — any language</h3>
+
+            <pre><button class="copy-btn" onclick="copy(this)">Copy</button"><span class="comment"># Python</span>
+<span class="kw">import</span> requests, re
+
+bundle = requests.get(<span class="string">"https://registry.sigil-protocol.org/patterns/bundle"</span>).json()
+patterns = [(p[<span class="string">"name"</span>], re.compile(p[<span class="string">"pattern"</span>])) <span class="kw">for</span> p <span class="kw">in</span> bundle[<span class="string">"patterns"</span>]]
+
+<span class="kw">def</span> scan(text):
+    <span class="kw">for</span> name, regex <span class="kw">in</span> patterns:
+        <span class="kw">if</span> regex.search(text):
+            <span class="kw">return</span> name
+    <span class="kw">return None</span></pre>
+
+            <!-- ── Signing ── -->
+            <h2 id="sdk-signing">Signing Submissions</h2>
+
+            <p>All write operations (submit pattern, submit policy, vote) require an Ed25519 signature from the
+                registered private key corresponding to your <code>did:sigil:</code>. The registry verifies the
+                signature using the public key stored in the DID table.</p>
+
+            <h3>Canonical message formats</h3>
+            <table>
+                <tr>
+                    <th>Operation</th>
+                    <th>Message to sign</th>
+                </tr>
+                <tr>
+                    <td>Submit pattern</td>
+                    <td><code>sigil-registry:pattern:{name}:{category}:{regex}:{author_did}</code></td>
+                </tr>
+                <tr>
+                    <td>Submit policy</td>
+                    <td><code>sigil-registry:policy:{tool_name}:{risk_level}:{requires_trust}:{author_did}</code></td>
+                </tr>
+                <tr>
+                    <td>Vote</td>
+                    <td><code>sigil-registry:vote:{pattern|policy}:{target_id}:{up|down}:{voter_did}</code></td>
+                </tr>
+            </table>
+
+            <h3>Example — signing in Rust</h3>
+            <pre><button class="copy-btn" onclick="copy(this)">Copy</button"><span class="kw">use</span> ed25519_dalek::{SigningKey, Signer};
+<span class="kw">use</span> base64::{engine::general_purpose::URL_SAFE_NO_PAD, Engine};
+
+<span class="comment">// Load your did:sigil: private key</span>
+<span class="kw">let</span> signing_key = SigningKey::from_bytes(&amp;your_32_byte_private_key);
+
+<span class="comment">// Build canonical message</span>
+<span class="kw">let</span> name = <span class="string">"stripe_secret_key"</span>;
+<span class="kw">let</span> msg = format!(<span class="string">"sigil-registry:pattern:{name}:credential:sk_live_...:did:sigil:my_ns_01"</span>);
+
+<span class="comment">// Sign and base64url-encode</span>
+<span class="kw">let</span> sig = signing_key.sign(msg.as_bytes());
+<span class="kw">let</span> sig_b64 = URL_SAFE_NO_PAD.encode(sig.to_bytes());</pre>
+
+            <div class="alert alert-warn">
+                <span>⚠️</span>
+                <p>Your private key never leaves your machine. The registry only sees the public key (registered in the
+                    DID table) and the signature. If your key is compromised, immediately revoke the DID and re-register
+                    with a new keypair.</p>
+            </div>
+
+            <!-- ── Error codes ── -->
+            <h2>Error Reference</h2>
+
+            <table>
+                <tr>
+                    <th>Status</th>
+                    <th>Error</th>
+                    <th>Cause</th>
+                </tr>
+                <tr>
+                    <td><code>400</code></td>
+                    <td><code>Validation error</code></td>
+                    <td>Invalid category, severity, or tool_name format</td>
+                </tr>
+                <tr>
+                    <td><code>400</code></td>
+                    <td><code>Invalid vote</code></td>
+                    <td>Vote must be <code>"up"</code> or <code>"down"</code></td>
+                </tr>
+                <tr>
+                    <td><code>401</code></td>
+                    <td><code>Invalid signature</code></td>
+                    <td>Signature does not verify against the author's public key</td>
+                </tr>
+                <tr>
+                    <td><code>403</code></td>
+                    <td><code>Author DID not registered</code></td>
+                    <td>The <code>author_did</code> is not in the DID registry or is revoked</td>
+                </tr>
+                <tr>
+                    <td><code>404</code></td>
+                    <td><code>Not found</code></td>
+                    <td>DID or resource ID not found</td>
+                </tr>
+                <tr>
+                    <td><code>409</code></td>
+                    <td><code>Conflict</code></td>
+                    <td>DID already registered, pattern name taken, or already voted</td>
+                </tr>
+                <tr>
+                    <td><code>422</code></td>
+                    <td><code>Validation error</code></td>
+                    <td>Invalid regex pattern (tested before storing)</td>
+                </tr>
+            </table>
+
+        </main>
+    </div>
+
+    <footer>
+        <p>
+            SIGIL Registry API · <a href="https://sigil-protocol.org">sigil-protocol.org</a> ·
+            <a href="https://github.com/sigil-eu/sigil">GitHub</a> ·
+            Hosted in Europe 🇪🇺 ·
+            EUPL-1.2 + Commercial ·
+            Spec v1.0.0-draft published 2026-02-21
+        </p>
+    </footer>
+
+    <script>
+        function copy(btn) {
+            const pre = btn.parentElement;
+            const text = pre.innerText.replace('Copy', '').trim();
+            navigator.clipboard.writeText(text).then(() => {
+                btn.textContent = 'Copied!';
+                setTimeout(() => btn.textContent = 'Copy', 1800);
+            });
+        }
+
+        // Highlight active sidebar link on scroll
+        const headings = document.querySelectorAll('h2[id], .endpoint[id]');
+        const links = document.querySelectorAll('.sidebar a[href^="#"]');
+
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    links.forEach(l => l.style.color = '');
+                    const active = document.querySelector(`.sidebar a[href="#${e.target.id}"]`);
+                    if (active) active.style.color = 'var(--accent)';
+                }
+            });
+        }, { rootMargin: '-20% 0px -70% 0px' });
+
+        headings.forEach(h => observer.observe(h));
+    </script>
+
+</body>
+
+</html>

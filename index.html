@@ -734,8 +734,8 @@
         <div class="nav-links">
             <a href="https://docs.rs/sigil-protocol" target="_blank">Documentation</a>
             <a href="https://github.com/sigil-eu/sigil/tree/main/spec" target="_blank">Specification</a>
-            <a href="#registry">Registry</a>
-            <a href="#inspector">Inspector</a>
+            <a href="#status">Status</a>
+            <a href="/registry.html">Registry Docs</a>
             <a href="https://github.com/sigil-eu/sigil" target="_blank" class="btn-nav">GitHub →</a>
         </div>
     </nav>
@@ -745,7 +745,7 @@
         <section class="hero">
             <div class="hero-badge">
                 <span class="dot"></span>
-                v0.1.4 — Published on crates.io · Registry live at registry.sigil-protocol.org
+                v0.1.4 · crates.io · Spec v1.0.0-draft published 2026-02-21 · Registry live
             </div>
             <h1>The Native <span class="highlight">Security Layer</span><br>for the Model Context Protocol</h1>
             <p class="hero-sub"
@@ -998,18 +998,67 @@
                         MyMolt →</a>
                 </div>
                 <div class="problem-card">
-                    <div class="status status-mcp">Coming Soon</div>
+                    <div class="status status-mcp">🔄 In Progress</div>
                     <h3 id="inspector">SIGIL Inspector</h3>
-                    <p>A native developer tool inspired by the MCP Inspector, allowing you to visualize security
-                        envelopes, policies, and audit
-                        logs locally.</p>
+                    <p>A native developer tool for visualizing security envelopes, policy verdicts, and audit logs
+                        locally. Coming soon as a web app.</p>
                 </div>
                 <div class="problem-card">
-                    <div class="status status-mcp">Coming Soon</div>
+                    <div class="status status-sigil">✅ Live</div>
                     <h3 id="registry">SIGIL Registry</h3>
-                    <p>A decentralized package registry for <code>SensitivityScanner</code> regex patterns and global
-                        <code>SecurityPolicies</code> to crowdsource agent safety across the globe.
-                    </p>
+                    <p>The <code>did:sigil:</code> DID registry and community-curated crowdsourced scanner + policy
+                        registry are live at <a href="https://registry.sigil-protocol.org" target="_blank"
+                            style="color:var(--accent);">registry.sigil-protocol.org</a>. 24 verified patterns · 25
+                        security policies. <a href="/registry.html" style="color:var(--accent);">Docs →</a></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Current Status -->
+        <section class="problem fade-in" id="status" style="padding-top: 2rem;">
+            <div class="section-label">Project Status</div>
+            <h2>Where SIGIL is Today</h2>
+            <p class="section-desc">
+                As of February 2026, SIGIL is a live, published open-source protocol with a working Rust implementation,
+                a formal specification, and a reference platform. Here is the honest current state.
+            </p>
+            <div class="problem-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+                <div class="problem-card">
+                    <div class="status status-sigil">✅ Live</div>
+                    <h3>Core Library</h3>
+                    <p><code>sigil-protocol</code> v0.1.4 published on crates.io. All five traits implemented and tested
+                        with full test coverage.</p>
+                </div>
+                <div class="problem-card">
+                    <div class="status status-sigil">✅ Published</div>
+                    <h3>Formal Specification</h3>
+                    <p>SIGIL Protocol Spec v1.0.0-draft published on GitHub and sigil-protocol.org on 2026-02-21.
+                        Constitutes public prior art disclosure.</p>
+                </div>
+                <div class="problem-card">
+                    <div class="status status-sigil">✅ Live</div>
+                    <h3>DID Registry</h3>
+                    <p><code>registry.sigil-protocol.org</code> is live resolving <code>did:sigil:</code>
+                        identifiers over HTTPS with TLS 1.3. Crowdsourced scanner (24 patterns) and policy registry (25
+                        policies) now included.</p>
+                </div>
+                <div class="problem-card">
+                    <div class="status status-sigil">✅ Reference Platform</div>
+                    <h3>MyMolt Integration</h3>
+                    <p>MyMolt is the first SIGIL-MCP conformant agent OS, implementing all conformance levels including
+                        the outbound vault gate.</p>
+                </div>
+                <div class="problem-card">
+                    <div class="status status-mcp">🔄 In Progress</div>
+                    <h3>Node.js / TypeScript SDK</h3>
+                    <p><code>@sigil-eu/sdk-node</code> client proxy library under development. Will auto-fetch
+                        community scanner patterns from the live registry at startup.</p>
+                </div>
+                <div class="problem-card">
+                    <div class="status status-mcp">🔄 In Progress</div>
+                    <h3>SIGIL Inspector UI</h3>
+                    <p>Visual developer tool for inspecting live security envelopes, policy verdicts, and audit logs.
+                        Available soon as a local web app.</p>
                 </div>
             </div>
         </section>
@@ -1052,6 +1101,7 @@
             <a href="https://github.com/sigil-eu">sigil-eu</a> ·
             <a href="https://registry.sigil-protocol.org">registry.sigil-protocol.org</a> ·
             Built in Europe 🇪🇺 ·
+            Spec v1.0.0-draft published 2026-02-21 ·
             Dual-licensed: <a href="https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12">EUPL-1.2</a> (open
             source) + <a href="mailto:info@sigil-protocol.org">Commercial</a> (proprietary use).
         </p>
