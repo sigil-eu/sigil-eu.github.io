@@ -497,6 +497,165 @@
             color: var(--text);
         }
 
+        /* ── Submit Form ── */
+        .submit-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin: 1.5rem 0 0;
+            transition: background 0.15s;
+            width: 100%;
+            text-align: left;
+        }
+
+        .submit-toggle:hover {
+            background: var(--surface2);
+        }
+
+        .submit-toggle .toggle-arrow {
+            transition: transform 0.2s;
+        }
+
+        .submit-toggle.open .toggle-arrow {
+            transform: rotate(90deg);
+        }
+
+        .submit-form {
+            display: none;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .submit-form.visible {
+            display: block;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-grid.full {
+            grid-template-columns: 1fr;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-field {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .form-field label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+        }
+
+        .form-field input,
+        .form-field select,
+        .form-field textarea {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.875rem;
+            font-family: inherit;
+            color: var(--text);
+            outline: none;
+            transition: border-color 0.15s;
+        }
+
+        .form-field input:focus,
+        .form-field select:focus,
+        .form-field textarea:focus {
+            border-color: var(--accent);
+        }
+
+        .form-field textarea {
+            resize: vertical;
+            min-height: 70px;
+        }
+
+        .form-field input[type="password"] {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+        }
+
+        .form-auth-note {
+            font-size: 0.8rem;
+            color: var(--muted);
+            margin-bottom: 1rem;
+            padding: 0.75rem 1rem;
+            background: rgba(109, 89, 232, 0.06);
+            border-radius: 8px;
+            border-left: 3px solid var(--accent);
+        }
+
+        .form-submit-btn {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 0.6rem 1.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.15s;
+            font-family: inherit;
+        }
+
+        .form-submit-btn:hover {
+            opacity: 0.88;
+        }
+
+        .form-submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .form-result {
+            margin-top: 1rem;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            display: none;
+        }
+
+        .form-result.success {
+            background: rgba(22, 163, 74, 0.1);
+            border: 1px solid rgba(22, 163, 74, 0.3);
+            color: #15803d;
+            display: block;
+        }
+
+        .form-result.error {
+            background: rgba(220, 38, 38, 0.1);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            color: #b91c1c;
+            display: block;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .page {
@@ -593,12 +752,12 @@
                 </div>
                 <div class="divider"></div>
                 <div class="stat">
-                    <span class="stat-val">43</span>
+                    <span class="stat-val" id="stat-patterns">43</span>
                     <span class="stat-label">Verified Patterns</span>
                 </div>
                 <div class="divider"></div>
                 <div class="stat">
-                    <span class="stat-val">35</span>
+                    <span class="stat-val" id="stat-policies">35</span>
                     <span class="stat-label">Security Policies</span>
                 </div>
                 <div class="divider"></div>
@@ -938,6 +1097,65 @@
                 </div>
             </div>
 
+            <!-- ── Submit Pattern Form ── -->
+            <button class="submit-toggle" id="toggle-pattern-form" onclick="toggleForm('pattern-form', this)">
+                <span class="toggle-arrow">▶</span> Submit a Scanner Pattern
+            </button>
+            <div class="submit-form" id="pattern-form">
+                <p class="form-auth-note">Submissions are permanently linked to your <code>did:sigil:</code> identity
+                    via Ed25519 signature. Your private key never leaves this browser.</p>
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label>Pattern name *</label>
+                        <input type="text" id="p-name" placeholder="e.g. github_pat" />
+                    </div>
+                    <div class="form-field">
+                        <label>Category *</label>
+                        <select id="p-category">
+                            <option value="credential">credential</option>
+                            <option value="secret">secret</option>
+                            <option value="pii">pii</option>
+                            <option value="financial">financial</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label>Severity *</label>
+                        <select id="p-severity">
+                            <option value="critical">critical</option>
+                            <option value="high">high</option>
+                            <option value="medium">medium</option>
+                            <option value="low">low</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label>Replacement hint</label>
+                        <input type="text" id="p-hint" placeholder="[SIGIL-VAULT: MY_KEY]" />
+                    </div>
+                </div>
+                <div class="form-grid full">
+                    <div class="form-field">
+                        <label>Regex pattern *</label>
+                        <input type="text" id="p-pattern" placeholder="sk_live_[0-9a-zA-Z]{24}"
+                            style="font-family:'JetBrains Mono',monospace;font-size:0.85rem;" />
+                    </div>
+                    <div class="form-field">
+                        <label>Description *</label>
+                        <textarea id="p-description"
+                            placeholder="What does this pattern detect and why is it sensitive?"></textarea>
+                    </div>
+                    <div class="form-field">
+                        <label>Your did:sigil: identifier *</label>
+                        <input type="text" id="p-did" placeholder="did:sigil:your_namespace_01" />
+                    </div>
+                    <div class="form-field">
+                        <label>Ed25519 private key (hex, 32 bytes) *</label>
+                        <input type="password" id="p-privkey" placeholder="paste your 64-char hex private key"
+                            autocomplete="off" />
+                    </div>
+                </div>
+                <button class="form-submit-btn" onclick="submitPattern()">Sign &amp; Submit Pattern</button>
+                <div class="form-result" id="p-result"></div>
+            </div>
             <!-- ═══════════════════════════════════════════════════════════════════ -->
             <!-- SECURITY POLICIES -->
             <!-- ═══════════════════════════════════════════════════════════════════ -->
@@ -1022,9 +1240,67 @@
                 </div>
             </div>
 
+            <!-- ── Submit Policy Form ── -->
+            <button class="submit-toggle" id="toggle-policy-form" onclick="toggleForm('policy-form', this)">
+                <span class="toggle-arrow">▶</span> Submit a Security Policy
+            </button>
+            <div class="submit-form" id="policy-form">
+                <p class="form-auth-note">Submissions are permanently linked to your <code>did:sigil:</code> identity
+                    via Ed25519 signature. Your private key never leaves this browser.</p>
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label>Tool name *</label>
+                        <input type="text" id="po-tool" placeholder="e.g. send_email" />
+                    </div>
+                    <div class="form-field">
+                        <label>Risk level *</label>
+                        <select id="po-risk">
+                            <option value="critical">critical</option>
+                            <option value="high">high</option>
+                            <option value="medium">medium</option>
+                            <option value="low">low</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label>Requires trust *</label>
+                        <select id="po-trust">
+                            <option value="High">High</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Low">Low</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label>Requires confirmation</label>
+                        <select id="po-confirm">
+                            <option value="false">No</option>
+                            <option value="true">Yes</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-grid full">
+                    <div class="form-field">
+                        <label>Rationale *</label>
+                        <textarea id="po-rationale"
+                            placeholder="Why is this tool risky? What can an attacker do with it?"></textarea>
+                    </div>
+                    <div class="form-field">
+                        <label>Your did:sigil: identifier *</label>
+                        <input type="text" id="po-did" placeholder="did:sigil:your_namespace_01" />
+                    </div>
+                    <div class="form-field">
+                        <label>Ed25519 private key (hex, 32 bytes) *</label>
+                        <input type="password" id="po-privkey" placeholder="paste your 64-char hex private key"
+                            autocomplete="off" />
+                    </div>
+                </div>
+                <button class="form-submit-btn" onclick="submitPolicy()">Sign &amp; Submit Policy</button>
+                <div class="form-result" id="po-result"></div>
+            </div>
+
             <!-- ═══════════════════════════════════════════════════════════════════ -->
             <!-- SDK INTEGRATION -->
             <!-- ═══════════════════════════════════════════════════════════════════ -->
+
 
             <h2 id="sdk-rust">SDK Integration</h2>
 
@@ -1177,16 +1453,26 @@ patterns = [(p[<span class="string">"name"</span>], re.compile(p[<span class="st
     </footer>
 
     <script>
-        // Fix: lift .copy-btn elements out of <pre> into a .code-wrap sibling div.
-        // Without this, the button's text content bleeds into the <pre> text flow,
-        // causing "Copyuse sigil_protocol::..." artefacts.
+        // ── 1. Live counters ──
+        async function refreshCounts() {
+            try {
+                const [p, pol] = await Promise.all([
+                    fetch('https://registry.sigil-protocol.org/patterns?verified=true').then(r => r.json()),
+                    fetch('https://registry.sigil-protocol.org/policies?verified=true').then(r => r.json())
+                ]);
+                if (p.count != null) document.getElementById('stat-patterns').textContent = p.count;
+                if (pol.count != null) document.getElementById('stat-policies').textContent = pol.count;
+            } catch (_) { /* keep hardcoded fallback */ }
+        }
+
+        // ── 2. Fix: lift .copy-btn elements out of <pre> into a .code-wrap div ──
         document.addEventListener('DOMContentLoaded', () => {
+            refreshCounts();
             document.querySelectorAll('pre .copy-btn').forEach(btn => {
                 const pre = btn.parentElement;
                 const wrap = document.createElement('div');
                 wrap.className = 'code-wrap';
                 pre.parentNode.insertBefore(wrap, pre);
-                // Move button BEFORE the pre so it sits in the wrapper, not the pre
                 wrap.appendChild(btn);
                 wrap.appendChild(pre);
                 pre.style.margin = '0';
@@ -1194,7 +1480,6 @@ patterns = [(p[<span class="string">"name"</span>], re.compile(p[<span class="st
         });
 
         function copy(btn) {
-            // After restructuring, the <pre> is our next sibling inside .code-wrap
             const pre = btn.nextElementSibling;
             const text = (pre && pre.tagName === 'PRE') ? pre.innerText.trim() : '';
             navigator.clipboard.writeText(text).then(() => {
@@ -1203,10 +1488,130 @@ patterns = [(p[<span class="string">"name"</span>], re.compile(p[<span class="st
             });
         }
 
-        // Highlight active sidebar link on scroll
+        // ── 3. Submit form toggle ──
+        function toggleForm(id, btn) {
+            const form = document.getElementById(id);
+            const open = form.classList.toggle('visible');
+            btn.classList.toggle('open', open);
+        }
+
+        // ── 4. Ed25519 signing via SubtleCrypto ──
+        async function signMessage(hexPrivKey, message) {
+            // Import raw 32-byte Ed25519 private key
+            const keyBytes = hexPrivKey.match(/.{2}/g).map(b => parseInt(b, 16));
+            if (keyBytes.length !== 32) throw new Error('Private key must be 32 bytes (64 hex chars)');
+            const key = await crypto.subtle.importKey(
+                'raw', new Uint8Array(keyBytes),
+                { name: 'Ed25519' }, false, ['sign']
+            );
+            const msgBytes = new TextEncoder().encode(message);
+            const sigBuf = await crypto.subtle.sign('Ed25519', key, msgBytes);
+            // base64url-encode (no padding)
+            return btoa(String.fromCharCode(...new Uint8Array(sigBuf)))
+                .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+        }
+
+        // ── 5. Pattern submission ──
+        async function submitPattern() {
+            const result = document.getElementById('p-result');
+            result.className = 'form-result';
+            const name = document.getElementById('p-name').value.trim();
+            const category = document.getElementById('p-category').value;
+            const pattern = document.getElementById('p-pattern').value.trim();
+            const description = document.getElementById('p-description').value.trim();
+            const severity = document.getElementById('p-severity').value;
+            const hint = document.getElementById('p-hint').value.trim();
+            const did = document.getElementById('p-did').value.trim();
+            const privkey = document.getElementById('p-privkey').value.trim();
+
+            if (!name || !pattern || !description || !did || !privkey) {
+                result.textContent = '⚠ Please fill in all required fields.';
+                result.className = 'form-result error';
+                return;
+            }
+            const btn = event.currentTarget;
+            btn.disabled = true;
+            btn.textContent = 'Signing...';
+            try {
+                const msg = `sigil-registry:pattern:${name}:${category}:${pattern}:${did}`;
+                const sig = await signMessage(privkey, msg);
+                const res = await fetch('https://registry.sigil-protocol.org/patterns', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name, description, category, pattern,
+                        replacement_hint: hint || `[SIGIL-VAULT: ${name.toUpperCase()}]`,
+                        severity, author_did: did, signature: sig
+                    })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    result.textContent = `✅ Submitted! ID: ${data.id ?? ''}. Your pattern will appear in the bundle once verified by a maintainer.`;
+                    result.className = 'form-result success';
+                    refreshCounts();
+                } else {
+                    result.textContent = `❌ ${data.error ?? data.message ?? 'Submission failed'}`;
+                    result.className = 'form-result error';
+                }
+            } catch (e) {
+                result.textContent = `❌ ${e.message}`;
+                result.className = 'form-result error';
+            }
+            btn.disabled = false;
+            btn.textContent = 'Sign & Submit Pattern';
+        }
+
+        // ── 6. Policy submission ──
+        async function submitPolicy() {
+            const result = document.getElementById('po-result');
+            result.className = 'form-result';
+            const tool_name = document.getElementById('po-tool').value.trim();
+            const risk_level = document.getElementById('po-risk').value;
+            const requires_trust = document.getElementById('po-trust').value;
+            const requires_confirmation = document.getElementById('po-confirm').value === 'true';
+            const rationale = document.getElementById('po-rationale').value.trim();
+            const did = document.getElementById('po-did').value.trim();
+            const privkey = document.getElementById('po-privkey').value.trim();
+
+            if (!tool_name || !rationale || !did || !privkey) {
+                result.textContent = '⚠ Please fill in all required fields.';
+                result.className = 'form-result error';
+                return;
+            }
+            const btn = event.currentTarget;
+            btn.disabled = true;
+            btn.textContent = 'Signing...';
+            try {
+                const msg = `sigil-registry:policy:${tool_name}:${risk_level}:${requires_trust}:${did}`;
+                const sig = await signMessage(privkey, msg);
+                const res = await fetch('https://registry.sigil-protocol.org/policies', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        tool_name, risk_level, requires_trust,
+                        requires_confirmation, rationale, author_did: did, signature: sig
+                    })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    result.textContent = `✅ Submitted! ID: ${data.id ?? ''}. Your policy will appear once verified by a maintainer.`;
+                    result.className = 'form-result success';
+                    refreshCounts();
+                } else {
+                    result.textContent = `❌ ${data.error ?? data.message ?? 'Submission failed'}`;
+                    result.className = 'form-result error';
+                }
+            } catch (e) {
+                result.textContent = `❌ ${e.message}`;
+                result.className = 'form-result error';
+            }
+            btn.disabled = false;
+            btn.textContent = 'Sign & Submit Policy';
+        }
+
+        // ── 7. Sidebar scroll highlight ──
         const headings = document.querySelectorAll('h2[id], .endpoint[id]');
         const links = document.querySelectorAll('.sidebar a[href^="#"]');
-
         const observer = new IntersectionObserver(entries => {
             entries.forEach(e => {
                 if (e.isIntersecting) {
@@ -1216,7 +1621,6 @@ patterns = [(p[<span class="string">"name"</span>], re.compile(p[<span class="st
                 }
             });
         }, { rootMargin: '-20% 0px -70% 0px' });
-
         headings.forEach(h => observer.observe(h));
     </script>
 
