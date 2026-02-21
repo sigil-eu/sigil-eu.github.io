@@ -310,6 +310,12 @@
             border-bottom: 1px solid var(--border);
         }
 
+        /* ── Code wrap (position context for copy button) ── */
+        .code-wrap {
+            position: relative;
+            margin: 1rem 0;
+        }
+
         /* ── Code block ── */
         pre {
             background: var(--code-bg);
@@ -319,9 +325,8 @@
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.82rem;
             line-height: 1.7;
-            margin: 1rem 0;
+            margin: 0;
             border: 1px solid var(--border);
-            position: relative;
             color: #2d2b55;
         }
 
@@ -1051,7 +1056,7 @@ println!(<span class="string">"Loaded {} rules from: {:?}"</span>, scanner.rule_
 
             <h3>Raw HTTP — any language</h3>
 
-            <pre><button class="copy-btn" onclick="copy(this)">Copy</button"><span class="comment"># Python</span>
+            <pre><button class="copy-btn" onclick="copy(this)">Copy</button><span class="comment"># Python</span>
 <span class="kw">import</span> requests, re
 
 bundle = requests.get(<span class="string">"https://registry.sigil-protocol.org/patterns/bundle"</span>).json()
@@ -1091,7 +1096,7 @@ patterns = [(p[<span class="string">"name"</span>], re.compile(p[<span class="st
             </table>
 
             <h3>Example — signing in Rust</h3>
-            <pre><button class="copy-btn" onclick="copy(this)">Copy</button"><span class="kw">use</span> ed25519_dalek::{SigningKey, Signer};
+            <pre><button class="copy-btn" onclick="copy(this)">Copy</button><span class="kw">use</span> ed25519_dalek::{SigningKey, Signer};
 <span class="kw">use</span> base64::{engine::general_purpose::URL_SAFE_NO_PAD, Engine};
 
 <span class="comment">// Load your did:sigil: private key</span>
@@ -1172,9 +1177,26 @@ patterns = [(p[<span class="string">"name"</span>], re.compile(p[<span class="st
     </footer>
 
     <script>
+        // Fix: lift .copy-btn elements out of <pre> into a .code-wrap sibling div.
+        // Without this, the button's text content bleeds into the <pre> text flow,
+        // causing "Copyuse sigil_protocol::..." artefacts.
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('pre .copy-btn').forEach(btn => {
+                const pre = btn.parentElement;
+                const wrap = document.createElement('div');
+                wrap.className = 'code-wrap';
+                pre.parentNode.insertBefore(wrap, pre);
+                // Move button BEFORE the pre so it sits in the wrapper, not the pre
+                wrap.appendChild(btn);
+                wrap.appendChild(pre);
+                pre.style.margin = '0';
+            });
+        });
+
         function copy(btn) {
-            const pre = btn.parentElement;
-            const text = pre.innerText.replace('Copy', '').trim();
+            // After restructuring, the <pre> is our next sibling inside .code-wrap
+            const pre = btn.nextElementSibling;
+            const text = (pre && pre.tagName === 'PRE') ? pre.innerText.trim() : '';
             navigator.clipboard.writeText(text).then(() => {
                 btn.textContent = 'Copied!';
                 setTimeout(() => btn.textContent = 'Copy', 1800);
