@@ -752,12 +752,12 @@
                 </div>
                 <div class="divider"></div>
                 <div class="stat">
-                    <span class="stat-val" id="stat-patterns">43</span>
+                    <span class="stat-val" id="stat-patterns">…</span>
                     <span class="stat-label">Verified Patterns</span>
                 </div>
                 <div class="divider"></div>
                 <div class="stat">
-                    <span class="stat-val" id="stat-policies">35</span>
+                    <span class="stat-val" id="stat-policies">…</span>
                     <span class="stat-label">Security Policies</span>
                 </div>
                 <div class="divider"></div>
@@ -1456,13 +1456,24 @@ patterns = [(p[<span class="string">"name"</span>], re.compile(p[<span class="st
         // ── 1. Live counters ──
         async function refreshCounts() {
             try {
-                const [p, pol] = await Promise.all([
-                    fetch('https://registry.sigil-protocol.org/patterns?verified=true').then(r => r.json()),
-                    fetch('https://registry.sigil-protocol.org/policies?verified=true').then(r => r.json())
+                const [pRes, polRes] = await Promise.all([
+                    fetch('https://registry.sigil-protocol.org/patterns?verified=true'),
+                    fetch('https://registry.sigil-protocol.org/policies?verified=true')
                 ]);
-                if (p.count != null) document.getElementById('stat-patterns').textContent = p.count;
-                if (pol.count != null) document.getElementById('stat-policies').textContent = pol.count;
-            } catch (_) { /* keep hardcoded fallback */ }
+                
+                if (pRes.ok) {
+                    const p = await pRes.json();
+                    if (p.count !== undefined) document.getElementById('stat-patterns').textContent = p.count;
+                }
+                
+                if (polRes.ok) {
+                    const pol = await polRes.json();
+                    if (pol.count !== undefined) document.getElementById('stat-policies').textContent = pol.count;
+                }
+            } catch (_) { 
+                document.getElementById('stat-patterns').textContent = '43';
+                document.getElementById('stat-policies').textContent = '35';
+            }
         }
 
         // ── 2. Fix: lift .copy-btn elements out of <pre> into a .code-wrap div ──
