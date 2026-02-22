@@ -927,57 +927,119 @@
 
         <!-- Start Securing -->
         <section class="code-section fade-in" id="start">
-            <div class="section-label">Developer Quick Start</div>
-            <h2>Start Securing the Ecosystem</h2>
+            <div class="section-label">Try It in 3 Minutes</div>
+            <h2>Detect a Leaked Secret in 3 Lines</h2>
             <p class="section-desc">
-                SIGIL provides drop-in native utilities for both MCP Servers and MCP Clients/Hosts to quickly embed the
-                security
-                envelope universally.
+                Install, scan, done. The registry provides 43 verified patterns — no configuration required.
             </p>
 
-            <h3>1. Secure your MCP Servers</h3>
-            <p class="section-desc" style="font-size: 0.9rem; margin-bottom: 1rem;">Wrap your existing Rust MCP toolsets
-                with the full SIGIL intercept pipeline in just 4 lines of code.</p>
-            <div class="code-block" style="text-align: left; margin-bottom: 2rem;">
-                <span class="kw">use</span> <span class="type">sigil_protocol</span>::mcp_server::{<span
-                    class="type">SigilMcpServer</span>, <span class="type">ToolDef</span>};
-                <span class="kw">use</span> <span class="type">sigil_protocol</span>::<span
-                    class="type">TrustLevel</span>;
-
-                <span class="cmt">// Create a SIGIL-secured MCP server pipeline</span>
-                <span class="kw">let</span> scanner = Arc::new(MyScanner);
-                <span class="kw">let</span> audit = Arc::new(MyAuditLogger::new());
-                <span class="kw">let mut</span> server = <span class="type">SigilMcpServer</span>::<span
-                    class="fn">new</span>(<span class="str">"my-tools"</span>, <span class="str">"1.0"</span>, scanner,
-                audit);
-
-                <span class="cmt">// Trust-gate sensitive tools (e.g. requires High trust via eIDAS)</span>
-                server.<span class="fn">register_tool_with_trust</span>(banking_tool, <span
-                    class="type">TrustLevel</span>::High);
-
-                <span class="cmt">// Automatically enforce policies, scan data, and log action!</span>
-                <span class="kw">let</span> response = server.<span class="fn">handle_request</span>(request,
-                caller_trust).<span class="kw">await</span>;
+            <!-- Tab switcher -->
+            <div style="display:flex;gap:0.5rem;justify-content:center;margin-bottom:1.5rem;" id="qs-tabs">
+                <button onclick="showTab('rust')" id="tab-rust"
+                    style="padding:0.4rem 1.2rem;border-radius:8px;border:1.5px solid var(--accent);background:var(--accent);color:#fff;font-weight:600;cursor:pointer;font-size:0.85rem;">Rust</button>
+                <button onclick="showTab('node')" id="tab-node"
+                    style="padding:0.4rem 1.2rem;border-radius:8px;border:1.5px solid var(--border);background:transparent;color:var(--text-dim);font-weight:500;cursor:pointer;font-size:0.85rem;">Node.js</button>
+                <button onclick="showTab('curl')" id="tab-curl"
+                    style="padding:0.4rem 1.2rem;border-radius:8px;border:1.5px solid var(--border);background:transparent;color:var(--text-dim);font-weight:500;cursor:pointer;font-size:0.85rem;">curl</button>
             </div>
 
-            <h3 style="margin-top: 3rem;">2. Secure your MCP Clients & Hosts</h3>
-            <p class="section-desc" style="font-size: 0.9rem; margin-bottom: 1rem;">Proxy agent tool calls through
-                SIGIL's universal Client Enforcer to intercept LLM responses safely before they execute on the host.</p>
-            <div class="code-block" style="text-align: left;">
-                <span class="kw">import</span> { <span class="type">SigilProxy</span> } <span class="kw">from</span>
-                <span class="str">"@sigil-eu/sdk-node"</span>;
+            <!-- Rust tab -->
+            <div id="qs-rust" class="code-block" style="text-align:left;max-width:700px;margin:0 auto 0.75rem;">
+                <span class="cmt"># Cargo.toml</span>
+                [dependencies]
+                sigil-protocol = <span class="str">"0.1"</span>
 
-                <span class="cmt">// Wrap the standard @modelcontextprotocol/sdk/client</span>
-                <span class="kw">const</span> secureClient = <span class="kw">new</span> <span
-                    class="fn">SigilProxy</span>(baseClient, {
-                enforceAudit: <span class="kw">true</span>,
-                blockLeakedSecrets: <span class="kw">true</span>
-                });
+                <span class="cmt">// main.rs</span>
+                <span class="kw">use</span> <span class="type">sigil_protocol</span>::registry::<span
+                    class="type">RemoteScanner</span>;
 
-                <span class="cmt">// Call tools normally; SIGIL intercepts policy violations automatically</span>
-                <span class="kw">await</span> secureClient.callTool({ name: <span class="str">"execute_query"</span>,
-                arguments: { q: <span class="str">"DROP TABLE users;"</span> }});
-                <span class="cmt">// -> throws SigilPolicyError: Action denied by risk policy.</span>
+                <span class="kw">let</span> scanner = <span class="type">RemoteScanner</span>::<span
+                    class="fn">from_registry</span>().<span class="kw">await</span>?;
+                <span class="kw">let</span> hits = scanner.<span class="fn">scan</span>(<span
+                    class="str">"AKIAIOSFODNN7EXAMPLE"</span>)?;
+                println!(<span class="str">"{hits:?}"</span>);
+                <span class="cmt">// → [ScanHit { pattern: "aws_access_key_id", severity: Critical }]</span>
+            </div>
+
+            <!-- Node tab (hidden by default) -->
+            <div id="qs-node" class="code-block"
+                style="text-align:left;max-width:700px;margin:0 auto 0.75rem;display:none;">
+                <span class="cmt"># install</span>
+                npm install sigil-protocol
+
+                <span class="cmt">// scan.mjs</span>
+                <span class="kw">import</span> { <span class="type">RemoteScanner</span> } <span class="kw">from</span>
+                <span class="str">'sigil-protocol'</span>;
+
+                <span class="kw">const</span> scanner = <span class="kw">await</span> <span
+                    class="type">RemoteScanner</span>.<span class="fn">create</span>();
+                <span class="kw">const</span> hits = scanner.<span class="fn">scan</span>(<span
+                    class="str">'AKIAIOSFODNN7EXAMPLE'</span>);
+                console.<span class="fn">log</span>(hits);
+                <span class="cmt">// → [{ pattern: 'aws_access_key_id', severity: 'critical' }]</span>
+            </div>
+
+            <!-- curl tab (hidden by default) -->
+            <div id="qs-curl" class="code-block"
+                style="text-align:left;max-width:700px;margin:0 auto 0.75rem;display:none;">
+                <span class="cmt"># Fetch all 43 verified patterns</span>
+                curl https://registry.sigil-protocol.org/patterns/bundle
+
+                <span class="cmt"># List credential patterns only</span>
+                curl <span
+                    class="str">"https://registry.sigil-protocol.org/patterns?category=credential&amp;verified=true"</span>
+
+                <span class="cmt"># Get a specific security policy</span>
+                curl https://registry.sigil-protocol.org/policies/execute_sql
+            </div>
+
+            <p style="text-align:center;font-size:0.82rem;color:var(--text-dimmer);margin-top:0.5rem;">
+                Live registry · 43 verified patterns · Frankfurt, EU · free &amp; open source
+            </p>
+
+            <script>
+                function showTab(tab) {
+                    ['rust', 'node', 'curl'].forEach(t => {
+                        document.getElementById('qs-' + t).style.display = t === tab ? 'block' : 'none';
+                        const btn = document.getElementById('tab-' + t);
+                        if (t === tab) {
+                            btn.style.background = 'var(--accent)';
+                            btn.style.color = '#fff';
+                            btn.style.borderColor = 'var(--accent)';
+                        } else {
+                            btn.style.background = 'transparent';
+                            btn.style.color = 'var(--text-dim)';
+                            btn.style.borderColor = 'var(--border)';
+                        }
+                    });
+                }
+            </script>
+
+            <div style="margin-top:3rem;border-top:1px solid var(--border);padding-top:2.5rem;">
+                <h3>Go Further — Secure your MCP Server</h3>
+                <p class="section-desc" style="font-size: 0.9rem; margin-bottom: 1rem;">Wrap your existing Rust MCP
+                    toolsets
+                    with the full SIGIL intercept pipeline in 4 lines.</p>
+                <div class="code-block"
+                    style="text-align: left; margin-bottom: 2rem; max-width:700px;margin-left:auto;margin-right:auto;">
+                    <span class="kw">use</span> <span class="type">sigil_protocol</span>::mcp_server::{<span
+                        class="type">SigilMcpServer</span>, <span class="type">ToolDef</span>};
+
+                    <span class="cmt">// Wrap your existing MCP server with SIGIL in 4 lines</span>
+                    <span class="kw">let</span> scanner = Arc::new(<span class="type">RemoteScanner</span>::<span
+                        class="fn">from_registry</span>().<span class="kw">await</span>?);
+                    <span class="kw">let</span> audit = Arc::new(<span class="type">FileAuditLogger</span>::<span
+                        class="fn">open</span>(<span class="str">"/var/log/sigil/audit.jsonl"</span>)?);
+                    <span class="kw">let mut</span> server = <span class="type">SigilMcpServer</span>::<span
+                        class="fn">new</span>(<span class="str">"my-tools"</span>, <span class="str">"1.0"</span>,
+                    scanner, audit);
+                    server.<span class="fn">register_tool_with_trust</span>(banking_tool, <span
+                        class="type">TrustLevel</span>::High);
+
+                    <span class="cmt">// Policies enforced, data scanned, every action logged — automatically</span>
+                    <span class="kw">let</span> response = server.<span class="fn">handle_request</span>(request,
+                    caller_trust).<span class="kw">await</span>;
+                </div>
             </div>
         </section>
 
