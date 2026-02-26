@@ -745,8 +745,7 @@
         <section class="hero">
             <div class="hero-badge">
                 <span class="dot"></span>
-                v0.1.4 · crates.io · Spec v1.0.0-draft · Registry live · <strong>🇩🇪 Patent Pending — filed
-                    2026-02-23</strong>
+                v0.1.4 · crates.io · Spec v1.0.0-draft published 2026-02-21 · Registry live
             </div>
             <h1>The Native <span class="highlight">Security Layer</span><br>for the Model Context Protocol</h1>
             <p class="hero-sub"
@@ -940,8 +939,6 @@
             <div style="display:flex;gap:0.5rem;justify-content:center;margin-bottom:1.5rem;" id="qs-tabs">
                 <button onclick="showTab('rust')" id="tab-rust"
                     style="padding:0.4rem 1.2rem;border-radius:8px;border:1.5px solid var(--accent);background:var(--accent);color:#fff;font-weight:600;cursor:pointer;font-size:0.85rem;">Rust</button>
-                <button onclick="showTab('python')" id="tab-python"
-                    style="padding:0.4rem 1.2rem;border-radius:8px;border:1.5px solid var(--border);background:transparent;color:var(--text-dim);font-weight:500;cursor:pointer;font-size:0.85rem;">Python</button>
                 <button onclick="showTab('node')" id="tab-node"
                     style="padding:0.4rem 1.2rem;border-radius:8px;border:1.5px solid var(--border);background:transparent;color:var(--text-dim);font-weight:500;cursor:pointer;font-size:0.85rem;">Node.js</button>
                 <button onclick="showTab('curl')" id="tab-curl"
@@ -966,39 +963,15 @@
                 <span class="cmt">// → [ScanHit { pattern: "aws_access_key_id", severity: Critical }]</span>
             </div>
 
-            <!-- Python tab (hidden by default) -->
-            <div id="qs-python" class="code-block"
-                style="text-align:left;max-width:700px;margin:0 auto 0.75rem;display:none;">
-                <span class="cmt"># Install the official Python SDK</span>
-                pip install sigil-protocol
-
-                <span class="cmt"># Standard Python Scan</span>
-                <span class="kw">from</span> sigil_protocol <span class="kw">import</span> scan
-                result = <span class="fn">scan</span>(<span class="str">'{"key": "AKIAIOSFODNN7EXAMPLE"}'</span>)
-                <span class="kw">if</span> result.blocked:
-                <span class="fn">print</span>(<span class="str">f"BLOCKED: {result.pattern}"</span>)
-                <span class="cmt"># → BLOCKED: aws_access_key_id</span>
-
-                <span class="cmt"># Or easily gate your CrewAI tools</span>
-                <span class="kw">from</span> sigil_protocol.crewai <span class="kw">import</span> sigil_gate
-
-                <span class="type">@sigil_gate</span>
-                <span class="kw">class</span> <span class="type">DangerousTool</span>(<span
-                    class="type">BaseTool</span>):
-                name = <span class="str">"execute_sql"</span>
-                <span class="kw">def</span> <span class="fn">_run</span>(<span class="kw">self</span>, query: <span
-                    class="type">str</span>) -> <span class="type">str</span>: ...
-            </div>
-
             <!-- Node tab (hidden by default) -->
             <div id="qs-node" class="code-block"
                 style="text-align:left;max-width:700px;margin:0 auto 0.75rem;display:none;">
                 <span class="cmt"># install</span>
-                npm install sigil-sdk
+                npm install sigil-protocol
 
                 <span class="cmt">// scan.mjs</span>
                 <span class="kw">import</span> { <span class="type">RemoteScanner</span> } <span class="kw">from</span>
-                <span class="str">'sigil-sdk'</span>;
+                <span class="str">'sigil-protocol'</span>;
 
                 <span class="kw">const</span> scanner = <span class="kw">await</span> <span
                     class="type">RemoteScanner</span>.<span class="fn">create</span>();
@@ -1028,7 +1001,7 @@
 
             <script>
                 function showTab(tab) {
-                    ['rust', 'python', 'node', 'curl'].forEach(t => {
+                    ['rust', 'node', 'curl'].forEach(t => {
                         document.getElementById('qs-' + t).style.display = t === tab ? 'block' : 'none';
                         const btn = document.getElementById('tab-' + t);
                         if (t === tab) {
@@ -1085,10 +1058,6 @@
                     <p>Install the SIGIL skill in OpenClaw to scan every MCP tool call for
                         leaked secrets, enforce policies, and write audit logs — no code
                         required.</p>
-                    <div
-                        style="background: var(--bg); padding: 0.5rem; border-radius: 6px; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-dim); margin: 0.5rem 0; border: 1px solid var(--border); overflow-x: auto; white-space: nowrap;">
-                        bash &lt;(curl -fsSL https://sigil-protocol.org/install.sh)
-                    </div>
                     <a href="https://github.com/sigil-eu/sigil/tree/main/openclaw-skill" target="_blank"
                         style="color: var(--accent); font-size: 0.85rem; margin-top: 0.5rem; display: inline-block; text-decoration: none; font-weight: 500;">View
                         OpenClaw Skill →</a>
@@ -1101,10 +1070,6 @@
                     <p>Drop in the <code>sigil-zeroclaw</code> Rust crate — implements the
                         ZeroClaw <code>Tool</code> and <code>Observability</code> traits to
                         gate every tool call with SIGIL's 43-pattern scanner.</p>
-                    <div
-                        style="background: var(--bg); padding: 0.5rem; border-radius: 6px; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-dim); margin: 0.5rem 0; border: 1px solid var(--border); overflow-x: auto; white-space: nowrap;">
-                        cargo add sigil-zeroclaw
-                    </div>
                     <a href="https://github.com/sigil-eu/sigil/tree/main/zeroclaw-skill" target="_blank"
                         style="color: var(--accent); font-size: 0.85rem; margin-top: 0.5rem; display: inline-block; text-decoration: none; font-weight: 500;">View
                         ZeroClaw Crate →</a>
@@ -1164,24 +1129,11 @@
                 </div>
 
                 <div class="problem-card">
-                    <div class="status status-sigil">✅ Published</div>
-                    <h3>Python SDK</h3>
-                    <p><code>sigil-protocol</code> published on PyPI. First-class middleware and tool gating support for
-                        LangChain, CrewAI, AutoGen, and mcp-agent.</p>
-                </div>
-                <div class="problem-card">
-                    <div class="status status-sigil">✅ Published</div>
-                    <h3>OpenClaw & ZeroClaw</h3>
-                    <p>Official security integrations published for the Claw AI ecosystem. Transparent
-                        <code>Observability</code> auditing for ZeroClaw and drop-in skill for OpenClaw.
-                    </p>
-                </div>
-                <div class="problem-card">
                     <div class="status status-sigil">✅ Available</div>
                     <h3>Node.js / TypeScript SDK</h3>
                     <p><code>sigil-protocol</code> npm package — <code>RemoteScanner</code> auto-fetches 43+ community
                         patterns at startup, with offline fallback. <code>SigilClient</code> for signed pattern/policy
-                        submissions.</p>
+                        submissions. npm publish coming soon.</p>
                 </div>
                 <div class="problem-card">
                     <div class="status status-mcp">🔄 In Progress</div>
@@ -1202,9 +1154,6 @@
             <div class="hero-actions" style="margin-top:2rem">
                 <a href="https://github.com/sigil-eu/sigil" class="btn btn-primary" target="_blank">
                     View Source
-                </a>
-                <a href="SIGIL-WHITEPAPER-BACHELOR-EN.pdf" class="btn btn-secondary" target="_blank">
-                    🎓 Bachelor Whitepaper
                 </a>
                 <a href="https://crates.io/crates/sigil-protocol" class="btn btn-secondary" target="_blank">
                     crates.io
